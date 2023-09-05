@@ -19,6 +19,7 @@ class Actor(db.Model):
 class Film(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), nullable=False)
+    release_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.Text)
     actors = db.relationship("Actor", secondary="actor_film", back_populates="films")
     showings = db.relationship("Showing", backref="film")
