@@ -16,7 +16,13 @@ def login():
     form = Login_Form()
 
     if request.method == 'POST':
-        pass
+        if Customer.query.filter_by(username=form.username.data).count() == 1:
+            customer = Customer.query.filter_by(username=form.username.data).first()
+            
+            if bcrypt.check_password_hash(customer.password, form.password.data):
+                print("logged in")
+        else:
+            print("Failed to login")
 
     return render_template('login.html',form=form)
 
@@ -26,7 +32,7 @@ def signup():
 
     if request.method == 'POST':
         customer = Customer(username=form.username.data,
-                            password=bcrypt.generate_password_hash(form.password.data))
+        password=bcrypt.generate_password_hash(form.password.data))
         
         db.session.add(customer)
         db.session.commit()
