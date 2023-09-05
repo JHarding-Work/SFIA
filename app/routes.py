@@ -3,34 +3,41 @@ from app.models import *
 
 from flask import redirect, url_for, render_template, request
 
+
 @app.route('/')
-@app.route('/Home')
+@app.route('/home')
 def home():
-    render_template('home.html')
+    return render_template('home.html')
 
-@app.route('/Login')
+
+@app.route('/login')
 def login():
-    render_template('login.html')
+    return render_template('login.html')
 
-@app.route('/Listings')
+
+@app.route('/listings')
 def listings():
-    render_template('listings.html')
+    return render_template('listings.html')
 
-@app.route('/About us')
+
+@app.route('/about_us')
 def about_us():
-    render_template('about_us.html')
+    return render_template('about_us.html')
 
-@app.route('/Contacts')
+
+@app.route('/contacts')
 def contacts():
-    render_template('contacts.html')
+    return render_template('contacts.html')
 
-@app.route('/New Releases')
+
+@app.route('/new_releases')
 def new_releases():
-    render_template('new_releases.html')
+    return render_template('new_releases.html')
 
-@app.route('/Ticket Booking')
+
+@app.route('/ticket_booking')
 def ticket_booking():
-    render_template('ticket_booking.html')
+    return render_template('ticket_booking.html')
 
 
 if __name__ == "__main__":
