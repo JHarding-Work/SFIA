@@ -4,16 +4,17 @@ from app import db
 actor_film = db.Table(
     "actor_film",
     db.metadata,
-    db.Column("actor_id", db.ForeignKey("actor.id")),
+    db.Column("actor_id", db.ForeignKey("person.id")),
     db.Column("film_id", db.ForeignKey("film.id"))
 )
 
 
-class Actor(db.Model):
+class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20))
-    films = db.relationship("Film", secondary="actor_film", back_populates="actors")
+    starred_in = db.relationship("Film", secondary="actor_film", back_populates="actors")
+    directed = db.relationship("Film", backref="director")
 
 
 class Film(db.Model):
@@ -21,7 +22,9 @@ class Film(db.Model):
     title = db.Column(db.String(30), nullable=False)
     release_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.Text)
-    actors = db.relationship("Actor", secondary="actor_film", back_populates="films")
+    image_src = db.Column(db.String(30))
+    director_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    actors = db.relationship("Person", secondary="actor_film", back_populates="starred_in")
     showings = db.relationship("Showing", backref="film")
 
 

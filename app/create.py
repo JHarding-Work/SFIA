@@ -3,10 +3,10 @@ from app.models import *
 
 from datetime import datetime as dt
 
-john = Actor(first_name="John", last_name="Actor")
-sarah = Actor(first_name="Sarah", last_name="Performer")
-stephenson = Actor(first_name="Stephen", last_name="Son")
-louise = Actor(first_name="Louise", last_name="Actor")
+john = Person(first_name="John", last_name="Actor")
+sarah = Person(first_name="Sarah", last_name="Performer")
+stephenson = Person(first_name="Stephen", last_name="Son")
+louise = Person(first_name="Louise", last_name="Actor")
 
 
 oppenheimer = Film(title="Oppenheimer", actors=[stephenson, sarah])
