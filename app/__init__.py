@@ -11,3 +11,5 @@ app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET')
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+from app import routes
