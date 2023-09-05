@@ -2,14 +2,16 @@
 
 {% block body %}
 <div class="form">
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
+    <fieldset>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
 
-        {{ form.username.label }} {{ form.username }}
-        <br>
-        {{ form.password.label }} {{ form.password }}
-        <br>
-        {{ form.submit }}
-    </form>
+            {{ form.username.label }} {{ form.username }}
+            <br>
+            {{ form.password.label }} {{ form.password }}
+            <br>
+            {{ form.submit }}
+        </form>
+    </fieldset>
 </div>
 {% endblock %}

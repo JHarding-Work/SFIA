@@ -14,8 +14,24 @@ def home():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     form = Login_Form()
+
+    if request.method == 'POST':
+        pass
+
     return render_template('login.html',form=form)
 
+@app.route('/Sign Up', methods=["GET", "POST"])
+def signup():
+    form = Sign_Up_Form()
+
+    if request.method == 'POST':
+        customer = Customer(username=form.username.data,
+                            password=bcrypt.generate_password_hash(form.password.data))
+        
+        db.session.add(customer)
+        db.session.commit()
+
+    return render_template('login.html',form=form)
 
 @app.route('/listings')
 def listings():
