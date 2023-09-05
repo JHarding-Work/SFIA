@@ -11,16 +11,17 @@ actor_film = db.Table(
 
 class Actor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(20))
+    first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20))
     films = db.relationship("Film", secondary="actor_film", back_populates="actors")
 
 
 class Film(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(30))
+    title = db.Column(db.String(30), nullable=False)
     description = db.Column(db.Text)
     actors = db.relationship("Actor", secondary="actor_film", back_populates="films")
+    showings = db.relationship("Showing", backref="film")
 
 
 class Customer(db.Model):
@@ -36,3 +37,20 @@ class Customer(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    bookings = db.relationship("Booking", backref="transaction")
+
+
+class Showing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    datetime = db.Column(db.DateTime, nullable=False)
+    film_id = db.column(db.Integer, db.ForeignKey('film.id'), nullable=False)
+    bookings = db.relationship("Booking", backref="showing")
+
+
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    child_ticket = db.Column(db.Integer, default=0)
+    adult_ticket = db.Column(db.Integer, default=0)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=False)
+    showing_id = db.Column(db.Integer, db.ForeignKey('showing.id'), nullable=False)
+    
