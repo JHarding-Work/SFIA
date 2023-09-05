@@ -10,7 +10,7 @@ pipeline{
             }
             stage('Run tests'){
                 steps{
-                    sh "echo 'this will run the tests'"
+                    sh "python3 -m pytest --cov --cov-report html"
                 }
             }
         }
