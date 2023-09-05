@@ -1,6 +1,7 @@
 from app import app, bcrypt
+from app.models import *
+
 from datetime import datetime as dt
-from models import *
 
 john = Actor(first_name="John", last_name="Actor")
 sarah = Actor(first_name="Sarah", last_name="Performer")
