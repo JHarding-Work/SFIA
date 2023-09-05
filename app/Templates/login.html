@@ -1,7 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div>
-    this is the login page
+<div class="form">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+
+        {{ form.username.label }} {{ form.username }}
+        <br>
+        {{ form.password.label }} {{ form.password }}
+        <br>
+        {{ form.submit }}
+    </form>
 </div>
 {% endblock %}

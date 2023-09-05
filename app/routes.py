@@ -1,5 +1,6 @@
 from app import app, bcrypt
 from app.models import *
+from app.forms import *
 
 from flask import redirect, url_for, render_template, request
 
@@ -10,9 +11,10 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    return render_template('login.html')
+    form = Login_Form()
+    return render_template('login.html',form=form)
 
 
 @app.route('/listings')
@@ -40,5 +42,5 @@ def ticket_booking():
     return render_template('ticket_booking.html')
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+#if __name__ == "__main__":
+#    app.run(debug=True)
