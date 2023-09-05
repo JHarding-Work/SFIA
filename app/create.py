@@ -1,20 +1,39 @@
 from app import app, bcrypt
+from datetime import datetime as dt
 from models import *
 
-actor = Actor(first_name="John", last_name="actor")
-film = Film(title="My first film.")
+john = Actor(first_name="John", last_name="Actor")
+sarah = Actor(first_name="Sarah", last_name="Performer")
+stephenson = Actor(first_name="Stephen", last_name="Son")
+louise = Actor(first_name="Louise", last_name="Actor")
+
+
+oppenheimer = Film(title="Oppenheimer", actors=[stephenson, sarah])
+blue = Film(title="Blue Beetle", actors=[stephenson])
+lord_of_the_rings = Film(title="Lord of the Rings", actors=[john, sarah])
+toy = Film(title="Toy Story", actors=[john, louise])
+
+
+for d in range(13, 24):
+    for n in 9, 13, 17:
+        Showing(datetime=dt(2023, 9, d, n, 00), film=oppenheimer)
+
+    for n in 11, 15:
+        Showing(datetime=dt(2023, 9, d, n, 00), film=blue)
+
+
+Showing(datetime=dt(2023, 9, 25, 11, 00), film=lord_of_the_rings)
+Showing(datetime=dt(2023, 9, 25, 15, 00), film=toy)
+
+
 customer = Customer(username="John Buyer", password="Password")
-transaction = Transaction(customer=customer)
-
-
-film.actors.append(actor)
 
 
 def populate_db():
     with app.app_context():
         db.drop_all()
         db.create_all()
-        db.session.add_all([actor, film, customer, transaction])
+        db.session.add_all([oppenheimer, blue, lord_of_the_rings, toy, customer])
 
 
 if __name__ == "__main__":

@@ -43,7 +43,7 @@ class Transaction(db.Model):
 class Showing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime, nullable=False)
-    film_id = db.column(db.Integer, db.ForeignKey('film.id'), nullable=False)
+    film_id = db.Column(db.Integer, db.ForeignKey('film.id'), nullable=False)
     bookings = db.relationship("Booking", backref="showing")
 
 
