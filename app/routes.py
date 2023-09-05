@@ -1,6 +1,8 @@
 from app import app, bcrypt
 from app.models import *
+from app.forms import DateSelectForm
 
+from datetime import datetime, date
 from flask import redirect, url_for, render_template, request
 
 
@@ -17,7 +19,15 @@ def login():
 
 @app.route('/listings')
 def listings():
-    return render_template('listings.html')
+    form = DateSelectForm()
+
+    target_date = form.date.strptime_format if form.validate_on_submit() else datetime.now().date()
+
+    return render_template(
+        'listings.html',
+        films=Film.query.all(),
+        date=target_date
+    )
 
 
 @app.route('/about_us')

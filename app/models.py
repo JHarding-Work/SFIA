@@ -16,16 +16,24 @@ class Person(db.Model):
     starred_in = db.relationship("Film", secondary="actor_film", back_populates="actors")
     directed = db.relationship("Film", backref="director")
 
+    @property
+    def fullname(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class Film(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), nullable=False)
-    release_date = db.Column(db.DateTime, nullable=False)
+    release_date = db.Column(db.DateTime)
     description = db.Column(db.Text)
-    image_src = db.Column(db.String(30))
+    image_src = db.Column(db.String(30), default="")
     director_id = db.Column(db.Integer, db.ForeignKey('person.id'))
     actors = db.relationship("Person", secondary="actor_film", back_populates="starred_in")
     showings = db.relationship("Showing", backref="film")
+
+    @property
+    def actor_list(self):
+        return [actor.fullname for actor in self.actors]
 
 
 class Customer(db.Model):
@@ -49,6 +57,10 @@ class Showing(db.Model):
     datetime = db.Column(db.DateTime, nullable=False)
     film_id = db.Column(db.Integer, db.ForeignKey('film.id'), nullable=False)
     bookings = db.relationship("Booking", backref="showing")
+
+    @property
+    def formatted_time(self):
+        return f"{self.datetime.hour}:{self.datetime.minute:0<2}"
 
 
 class Booking(db.Model):

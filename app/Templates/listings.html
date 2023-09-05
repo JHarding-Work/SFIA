@@ -1,7 +1,28 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div>
-    This is the listings page
-</div>
+    {% for film in films %}
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." width="100%">
+            </div>
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h2>{{ film.title }}</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        CAST: {{ ", ".join(film.actor_list) }} <br> DIRECTOR: {{ film.director }}
+                    </div>
+                    <div class="col-sm-6">
+                        {% for showtime in film.showings %}
+                            <p> {{ showtime.formatted_time }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
