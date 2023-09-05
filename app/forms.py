@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
-# Forms go here.
+class Login_Form(FlaskForm):
+    username = 
