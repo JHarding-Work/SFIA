@@ -39,6 +39,7 @@ class Transaction(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     bookings = db.relationship("Booking", backref="transaction")
 
+
 class Showing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     datetime = db.Column(db.DateTime, nullable=False)
