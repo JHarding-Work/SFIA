@@ -2,7 +2,7 @@ from app import app, bcrypt
 from app.models import *
 from app.forms import *
 
-from datetime import datetime
+from datetime import datetime, date
 from flask import redirect, url_for, render_template, request
 
 
@@ -80,8 +80,18 @@ def contacts():
 
 @app.route('/new releases')
 def new_releases():
-    return render_template('new_releases.html')
+    
+    current_time = datetime.now()
+    lb = datetime(current_time.year,current_time.month-1,current_time.day)
+    ub = datetime(current_time.year,current_time.month+1,current_time.day)
+    
+    print(current_time)
+    print(lb)
+    print(ub)
 
+    return render_template(
+        'new_releases.html',
+        films=Film.query.filter(lb<Film.release_date, Film.release_date<ub).all())
 
 @app.route('/ticket booking')
 def ticket_booking():
