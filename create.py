@@ -7,15 +7,21 @@ john = Person(first_name="John", last_name="Actor")
 sarah = Person(first_name="Sarah", last_name="Performer")
 stephenson = Person(first_name="Stephen", last_name="Son")
 louise = Person(first_name="Louise", last_name="Actor")
+john_d = Person(first_name="John", last_name="Director")
 
 
-oppenheimer = Film(title="Oppenheimer", actors=[stephenson, sarah], image_src="oppenheimer.jpg")
-blue = Film(title="Blue Beetle", actors=[stephenson], image_src="blue.jpg")
-lord_of_the_rings = Film(title="Lord of the Rings", actors=[john, sarah], image_src="lord-of-the-rings.jpg")
+oppenheimer = Film(title="Oppenheimer", director=john_d, actors=[stephenson, sarah], image_src="oppenheimer.jpg")
+blue = Film(title="Blue Beetle", director=sarah, actors=[stephenson], image_src="blue.jpg")
+lord_of_the_rings = Film(title="Lord of the Rings", director=john_d, actors=[john, sarah], image_src="lord-of-the-rings.jpg")
 toy = Film(title="Toy Story", actors=[john, louise], image_src="toy_story.jpg")
 
 
-for d in range(13, 27):
+for d in range(5, 14):
+    for n in 11, 14:
+        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer)
+
+
+for d in range(13, 24):
     for n in 9, 13, 17:
         Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer)
 

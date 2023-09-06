@@ -4,9 +4,6 @@
     <form method="post">
         {{ form.date.label }}: {{ form.date }} {{ form.submit }}
     </form>
-
-    {{ date }}
-
     {% for film in films %}
         <div class="row">
             <div class="col-sm-4">
@@ -20,10 +17,10 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        CAST: {{ ", ".join(film.actor_list) }} <br> DIRECTOR: {{ film.director }}
+                        CAST: {{ ", ".join(film.actor_list) }} <br> DIRECTOR: {{ film.director.fullname }}
                     </div>
                     <div class="col-sm-6">
-                        {% for showtime in film.showings %}
+                        {% for showtime in film.showings if showtime.date == form.date.data %}
                             <p> {{ showtime.formatted_time }}</p>
                         {% endfor %}
                     </div>

@@ -61,7 +61,7 @@ class Showing(db.Model):
 
     @property
     def formatted_time(self):
-        return f"{self.datetime.hour}:{self.datetime.minute:0<2}"
+        return f"{self.time.hour}:{self.time.minute:0<2}"
 
 
 class Booking(db.Model):

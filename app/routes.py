@@ -52,13 +52,14 @@ def opening_times():
 @app.route('/listings', methods=['GET', 'POST'])
 def listings():
     form = DateSelectForm()
-    target_date = form.date.data if form.is_submitted() else datetime.now().date()
+
+    if not form.is_submitted():
+        form.date.data = datetime.now().date()
 
     return render_template(
         'listings.html',
         films=Film.query.all(),
         form=form,
-        date=target_date,
     )
 
 
