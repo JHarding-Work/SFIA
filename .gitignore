@@ -8,6 +8,9 @@ instance/
 # Environments
 .env
 .venv
+.idea
+app/static/*
+
 env/
 venv/
 ENV/
