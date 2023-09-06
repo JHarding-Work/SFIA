@@ -1,7 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div>
-    This is the home page
+<div class="jumbotron text-center">
+    <h1 class="font-impact">QA Cinemas</h1>
+    <p>Your gateway to a world of cinematic excellence!</p> 
 </div>
+<nav id="home">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Jump In..</h2>
+        </div>
+    </div>
+    <div class="row font-impact spaced">
+        <div class="col-sm-6">
+            <a href="listings">New Releases</a>
+        </div>
+        <div class="col-sm-6">
+            <a href="/listings">All Showings</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>New to QA Cinemas?</h2>
+        </div>
+    </div>
+    <div class="row h-25 font-impact spaced">
+        <div class="col-sm-6">
+            <a href="/login">Sign Up</a>
+        </div>
+        <div class="col-sm-6">
+            <a href="/about us">About Us</a>
+        </div>
+    </div>
+</nav>
 {% endblock %}
