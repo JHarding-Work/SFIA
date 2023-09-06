@@ -1,8 +1,35 @@
  /* Basic Styling options to be used as a base for the whole websites design */
 
+body{
+    background-color: #004050;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
 
 
+.font-impact{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
 
 
+.navbar-nav a {
+    font-size: 24px;
+}
+
+.navbar-brand {
+    font-size: 48px;
+}
 
 
+.spaced {
+    padding-bottom: 10%;
+}
+
+#home div{
+    text-align: center;
+}
+
+#home a{
+    font-size: 36px;
+    color: black;
+    text-decoration: none;
+}
