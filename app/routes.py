@@ -41,7 +41,7 @@ def signup():
             db.session.add(customer)
             db.session.commit()
 
-    return render_template('login.html', form=form)
+    return render_template('sign_up.html', form=form)
 
 
 @app.route('/opening times')
