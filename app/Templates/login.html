@@ -3,14 +3,17 @@
 {% block body %}
 <div class="form">
     <fieldset>
+        
         <form action="" method="post">
             {{ form.hidden_tag() }}
 
-            {{ form.username.label }} {{ form.username }}
+            {{ form.username.label }} {{ form.username(class="loguptbx", id="usernametbx") }}
             <br>
-            {{ form.password.label }} {{ form.password }}
             <br>
-            {{ form.submit }}
+            {{ form.password.label }} {{ form.password(class="loguptbx") }}
+            <br>
+            <br>
+            {{ form.submit(class="logupbtn", id="logupsubmit") }}
         </form>
     </fieldset>
 </div>
