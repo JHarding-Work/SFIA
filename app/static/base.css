@@ -6,28 +6,3 @@
 
 
 
-
-
-
- /* Positional and minor visual changes to particular parts of the website */
-
-/* Login and signup positioning and sizing */
-#usernametbx {
-    left: 6px;   
-}
-#logupsubmit {
-    height: 40px;
-    width: 120px;
-}
-.loguptbx, .logupbtn {
-    padding: 0;
-    height: 30px;
-    position: relative;
-    left: 10px;
-    outline: none;
-    border: 1px solid;
-    font-size: 16px;  
-}
-
-
-
