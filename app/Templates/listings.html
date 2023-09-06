@@ -1,6 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+    <form method="post">
+        {{ form.date.label }}: {{ form.date }} {{ form.submit }}
+    </form>
+
+    {{ date }}
+
     {% for film in films %}
         <div class="row">
             <div class="col-sm-4">

@@ -44,16 +44,16 @@ def signup():
     return render_template('login.html', form=form)
 
 
-@app.route('/listings')
+@app.route('/listings', methods=['GET', 'POST'])
 def listings():
     form = DateSelectForm()
-
-    target_date = form.date.strptime_format if form.validate_on_submit() else datetime.now().date()
+    target_date = form.date.data if form.is_submitted() else datetime.now().date()
 
     return render_template(
         'listings.html',
         films=Film.query.all(),
-        date=target_date
+        form=form,
+        date=target_date,
     )
 
 
@@ -75,7 +75,3 @@ def new_releases():
 @app.route('/ticket_booking')
 def ticket_booking():
     return render_template('ticket_booking.html')
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
