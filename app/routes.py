@@ -63,6 +63,11 @@ def listings():
     )
 
 
+@app.route('/film/<int:film_id>')
+def film(film_id):
+    return render_template("film.html", film=Film.query.get(film_id))
+
+
 @app.route('/about us')
 def about_us():
     return render_template('about_us.html')

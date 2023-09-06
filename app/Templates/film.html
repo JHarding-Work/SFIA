@@ -1,0 +1,5 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." width="100%">
+{% endblock %}
