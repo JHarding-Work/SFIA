@@ -63,7 +63,7 @@ def listings():
     )
 
 
-@app.route('/about_us')
+@app.route('/about us')
 def about_us():
     return render_template('about_us.html')
 
@@ -73,11 +73,11 @@ def contacts():
     return render_template('contacts.html')
 
 
-@app.route('/new_releases')
+@app.route('/new releases')
 def new_releases():
     return render_template('new_releases.html')
 
 
-@app.route('/ticket_booking')
+@app.route('/ticket booking')
 def ticket_booking():
     return render_template('ticket_booking.html')
