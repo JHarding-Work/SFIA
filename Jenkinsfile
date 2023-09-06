@@ -10,7 +10,7 @@ pipeline{
             }
             stage('Run tests'){
                 steps{
-                    sh "python3 -m pytest --cov --cov-report html"
+                    sh "python3 -m pytest --cov app --cov-report html"
                 }
             }
         }
