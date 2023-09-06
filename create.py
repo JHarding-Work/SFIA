@@ -1,7 +1,7 @@
 from app import app, bcrypt
 from app.models import *
 
-from datetime import datetime as dt
+from datetime import date, time
 
 john = Person(first_name="John", last_name="Actor")
 sarah = Person(first_name="Sarah", last_name="Performer")
@@ -15,16 +15,16 @@ lord_of_the_rings = Film(title="Lord of the Rings", actors=[john, sarah], image_
 toy = Film(title="Toy Story", actors=[john, louise], image_src="toy_story.jpg")
 
 
-for d in range(13, 14):
+for d in range(13, 27):
     for n in 9, 13, 17:
-        Showing(datetime=dt(2023, 9, d, n, 00), film=oppenheimer)
+        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer)
 
     for n in 11, 15:
-        Showing(datetime=dt(2023, 9, d, n, 00), film=blue)
+        Showing(date=date(2023, 9, d), time=time(n, 0), film=blue)
 
 
-Showing(datetime=dt(2023, 9, 25, 11, 00), film=lord_of_the_rings)
-Showing(datetime=dt(2023, 9, 25, 15, 00), film=toy)
+Showing(date=date(2023, 9, 25), time=time(11, 0), film=lord_of_the_rings)
+Showing(date=date(2023, 9, 25), time=time(15, 0), film=toy)
 
 
 customer = Customer(username="John Buyer", password="Password")
