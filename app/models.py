@@ -24,7 +24,7 @@ class Person(db.Model):
 class Film(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), nullable=False)
-    release_date = db.Column(db.DateTime)
+    release_date = db.Column(db.Date)
     description = db.Column(db.Text)
     image_src = db.Column(db.String(30), default="")
     director_id = db.Column(db.Integer, db.ForeignKey('person.id'))
