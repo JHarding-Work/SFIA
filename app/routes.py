@@ -2,7 +2,7 @@ from app import app, bcrypt
 from app.models import *
 from app.forms import *
 
-from datetime import datetime, date
+from datetime import datetime
 from flask import redirect, url_for, render_template, request
 
 

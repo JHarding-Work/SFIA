@@ -9,7 +9,7 @@ instance/
 .env
 .venv
 .idea
-app/static/*
+app/static/*.jpg
 
 env/
 venv/
