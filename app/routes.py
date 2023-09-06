@@ -28,20 +28,25 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/Sign Up', methods=["GET", "POST"])
+@app.route('/sign up', methods=["GET", "POST"])
 def signup():
     form = SignUpForm()
 
     if request.method == 'POST':
-        customer = Customer(
-            username=form.username.data,
-            password=bcrypt.generate_password_hash(form.password.data)
+        if form.validate_on_submit():
+            customer = Customer(
+                username=form.username.data,
+                password=bcrypt.generate_password_hash(form.password.data)
         )
-
-        db.session.add(customer)
-        db.session.commit()
+            db.session.add(customer)
+            db.session.commit()
 
     return render_template('login.html', form=form)
+
+
+@app.route('/opening times')
+def opening_times():
+    return render_template('opening_times.html')
 
 
 @app.route('/listings', methods=['GET', 'POST'])
