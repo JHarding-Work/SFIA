@@ -1,6 +1,5 @@
 from app import app, bcrypt
 from app.models import *
-
 from datetime import date, time
 
 john = Person(first_name="John", last_name="Actor")
@@ -10,10 +9,10 @@ louise = Person(first_name="Louise", last_name="Actor")
 john_d = Person(first_name="John", last_name="Director")
 
 
-oppenheimer = Film(title="Oppenheimer", director=john_d, actors=[stephenson, sarah], image_src="oppenheimer.jpg")
-blue = Film(title="Blue Beetle", director=sarah, actors=[stephenson], image_src="blue.jpg")
-lord_of_the_rings = Film(title="Lord of the Rings", director=john_d, actors=[john, sarah], image_src="lord-of-the-rings.jpg")
-toy = Film(title="Toy Story", actors=[john, louise], image_src="toy_story.jpg")
+oppenheimer = Film(title="Oppenheimer", director=john_d, actors=[stephenson, sarah], image_src="oppenheimer.jpg", release_date=date(2023,9,6))
+blue = Film(title="Blue Beetle", director=sarah, actors=[stephenson], image_src="blue.jpg", release_date=date(2023,9,15))
+lord_of_the_rings = Film(title="Lord of the Rings", director=john_d, actors=[john, sarah], image_src="lord-of-the-rings.jpg", release_date=date(2024,9,6))
+toy = Film(title="Toy Story", actors=[john, louise], image_src="toy_story.jpg", release_date=date(2021,9,6))
 
 
 for d in range(5, 14):

@@ -2,7 +2,7 @@ from app import app, bcrypt
 from app.models import *
 from app.forms import *
 
-from datetime import datetime, date
+from datetime import datetime
 from flask import redirect, url_for, render_template, request
 
 
@@ -84,10 +84,6 @@ def new_releases():
     current_time = datetime.now()
     lb = datetime(current_time.year,current_time.month-1,current_time.day)
     ub = datetime(current_time.year,current_time.month+1,current_time.day)
-    
-    print(current_time)
-    print(lb)
-    print(ub)
 
     return render_template(
         'new_releases.html',
