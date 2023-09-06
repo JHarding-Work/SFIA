@@ -8,8 +8,14 @@ instance/
 # Environments
 .env
 .venv
+.idea
+app/static/*
+
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+app/__pycache__/*
+tests/__pychache__/*
