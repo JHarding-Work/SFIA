@@ -59,5 +59,26 @@
     Whether you want to share your thoughts, collaborate, or simply say hello, we look forward to hearing from you. Thank you for choosing QA Cinemas 
     as your cinematic destination.
 </div>
+<h5>Alternatively contact is here:</h5>
+<br>
+<form method="post" action="/contacts">
+    <div>Reason:</div>
+    <select name="reason" size="1" class="form-control">
+        <option value="ticket_info">Ticket Information</option>
+        <option value="special_screen">Special Screenings</option>
+        <option value="group_booking">Group Bookings</option>
+        <option value="feedback">Feedback</option>
+        <option value="other">Other</option>
+    </select>
+    <br>
+    <div>Email:</div>
+    <input type="email" name="email" class="form-control">
+    <br>
+    <div>Enter your message here:</div>
+    <textarea name="email_contents" cols="30" rows="10" class="form-control">
+    </textarea>
+    <br>
+    <button type="submit" class="form-control">Submit</button>
+</form>
 
 {% endblock %}
