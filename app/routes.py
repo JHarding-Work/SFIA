@@ -101,14 +101,20 @@ def new_releases():
         form=form
     )
 
-@app.route('/ticket booking')
+@app.route('/ticket booking', methods=['GET','POST'])
 def ticket_booking():
     form = BookingForm()
 
     films_list = Film.query.all()
-    form.movie.choices = [(i.title,i.title) for i in films_list]
+    form.movie.choices = [(i.id,i.title) for i in films_list]
 
+    if form.search.data:
+        print(form.movie.data)
+        showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
+        form.time.choices = [(i.time,i.time) for i in showing_list]
 
-
+        return render_template('ticket_booking.html',form=form)
+    elif form.submit.data:
+        pass
 
     return render_template('ticket_booking.html',form=form)

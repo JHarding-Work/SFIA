@@ -36,6 +36,7 @@ class DateSelectForm(FlaskForm):
 
 class BookingForm(FlaskForm):
      movie = SelectField("Movie: ")
+     search = SubmitField("Search")
      date = DateField("Date")
      time = SelectField("Times: ")
      no_of_adult = IntegerField("Number of Adult tickets")
