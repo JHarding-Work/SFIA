@@ -1,7 +1,7 @@
 pipeline{
         agent any
         environment{
-            SECRET_KEY=credentials('SECRET_KEY')
+            SECRETS_FILE=credentials('SECRETS_FILE')
         }
         stages{
             stage('Installation'){
@@ -18,8 +18,9 @@ pipeline{
             }
             stage('Deploy Development Server'){
                 steps{
+                    sh 'echo $SECRET_KEY'
                     sh 'sudo docker-compose down'
-                    sh 'sudo docker-compose up -d'
+                    sh 'sudo docker-compose --env-file ${SECRETS_FILE} up -d'
                 }
             }
         }
