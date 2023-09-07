@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  flask-app:
+    build: .
+    ports:
+    - target: 5000
+      published: 5000
+      protocol: tcp
+    environment:
+      - SQLALCHEMY_DATABASE_URI=sqlite:///data.sqlite
+    networks:
+      - network
+  nginx:
+    image: nginx:latest
+    ports:
+    - target: 80
+      published: 80
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: ./nginx.conf
+      target: /etc/nginx/nginx.conf
+    networks:
+        - network
+networks:
+  network:
