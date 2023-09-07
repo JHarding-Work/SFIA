@@ -1,6 +1,12 @@
+import os
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length,ValidationError
+
+from app import app
+
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 
 class LoginForm(FlaskForm):
