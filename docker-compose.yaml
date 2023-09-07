@@ -8,6 +8,7 @@ services:
       protocol: tcp
     environment:
       - SQLALCHEMY_DATABASE_URI=sqlite:///data.sqlite
+      - SECRET_KEY="${SECRET_KEY}"
     networks:
       - network
   nginx:
