@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length,ValidationError
 
-from models import Film
 
 class LoginForm(FlaskForm):
     username = StringField('Username')
