@@ -101,12 +101,13 @@ def new_releases():
         form=form
     )
 
-@app.route('/ticket booking', methods=['GET','POST'])
+
+@app.route('/ticket booking', methods=['GET', 'POST'])
 def ticket_booking():
     form = BookingForm()
 
     films_list = Film.query.all()
-    form.movie.choices = [(i.id,i.title) for i in films_list]
+    form.movie.choices = [(i.id, i.title) for i in films_list]
 
     if form.search.data:
         print(form.movie.data)
