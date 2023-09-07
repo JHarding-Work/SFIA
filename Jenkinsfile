@@ -1,5 +1,8 @@
 pipeline{
         agent any
+        environment{
+            SECRET_KEY=credentials('SECRET_KEY')
+        }
         stages{
             stage('Installation'){
                 steps{
@@ -16,7 +19,7 @@ pipeline{
             stage('Deploy Development Server'){
                 steps{
                     sh "sudo docker-compose down"
-                    sh "sudo docker-compose up -d"
+                    sh "sudo docker-compose up -e SECRET_KEY=$SECRET_KEY -d"
                 }
             }
         }
