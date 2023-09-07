@@ -103,4 +103,12 @@ def new_releases():
 
 @app.route('/ticket booking')
 def ticket_booking():
-    return render_template('ticket_booking.html')
+    form = BookingForm()
+
+    films_list = Film.query.all()
+    form.movie.choices = [(i.title,i.title) for i in films_list]
+
+
+
+
+    return render_template('ticket_booking.html',form=form)

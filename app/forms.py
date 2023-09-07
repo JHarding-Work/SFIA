@@ -38,6 +38,6 @@ class BookingForm(FlaskForm):
      movie = SelectField("Movie: ")
      date = DateField("Date")
      time = SelectField("Times: ")
-     no_of_adults = IntegerField("Number of Adult tickets")
+     no_of_adult = IntegerField("Number of Adult tickets")
      no_of_child = IntegerField("Number of Child tickets")
      submit = SubmitField("Confirm Order")
