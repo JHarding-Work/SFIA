@@ -19,6 +19,9 @@ pipeline{
             stage('Deploy Development Server'){
                 steps{
                     sh 'sudo docker-compose down'
+                    sh 'ls /home/jenkins'
+                    sh 'ls /home/jenkins/.jenkins'
+                    sh 'ls /home/jenkins/.jenkins/workspace'
                     sh 'sudo docker-compose --env-file $SECRETS_FILE up -d'
                 }
             }
