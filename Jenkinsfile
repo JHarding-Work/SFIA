@@ -18,10 +18,8 @@ pipeline{
             }
             stage('Deploy Development Server'){
                 steps{
-                    sh 'echo $SECRETS_FILE'
-                    sh 'cp $SECRETS_FILE .'
                     sh 'sudo docker-compose down'
-                    sh 'sudo docker-compose --env-file secrets.txt up -d'
+                    sh 'sudo docker-compose --env-file $SECRETS_FILE up -d'
                 }
             }
         }
