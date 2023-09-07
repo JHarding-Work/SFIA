@@ -2,7 +2,7 @@ from app import app, bcrypt
 from app.models import *
 from app.forms import *
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from flask import redirect, url_for, render_template, request
 
 
@@ -41,7 +41,7 @@ def signup():
             db.session.add(customer)
             db.session.commit()
 
-    return render_template('login.html', form=form)
+    return render_template('sign_up.html', form=form)
 
 
 @app.route('/opening times')
@@ -52,31 +52,55 @@ def opening_times():
 @app.route('/listings', methods=['GET', 'POST'])
 def listings():
     form = DateSelectForm()
-    target_date = form.date.data if form.is_submitted() else datetime.now().date()
+
+    if not form.is_submitted():
+        form.date.data = datetime.now().date()
 
     return render_template(
         'listings.html',
         films=Film.query.all(),
         form=form,
-        date=target_date,
     )
 
 
-@app.route('/about_us')
+@app.route('/film/<int:film_id>')
+def film(film_id):
+    return render_template("film.html", film=Film.query.get(film_id))
+
+
+@app.route('/about us')
 def about_us():
     return render_template('about_us.html')
 
 
-@app.route('/contacts')
+@app.route('/contacts', methods=['GET', 'POST'])
 def contacts():
     return render_template('contacts.html')
 
 
-@app.route('/new_releases')
+@app.route('/new releases')
 def new_releases():
-    return render_template('new_releases.html')
+    form = DateSelectForm()
 
+    if not form.is_submitted():
+        form.date.data = datetime.now().date()
+    
+    current_time = datetime.now()
+    one_month = timedelta(days=30)
 
-@app.route('/ticket_booking')
+    lb = current_time - one_month
+    ub = current_time + one_month
+    
+    print(current_time)
+    print(lb)
+    print(ub)
+
+    return render_template(
+        'listings.html',
+        films=Film.query.filter(lb < Film.release_date, Film.release_date<ub).all(),
+        form=form
+    )
+
+@app.route('/ticket booking')
 def ticket_booking():
     return render_template('ticket_booking.html')

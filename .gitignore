@@ -9,7 +9,7 @@ instance/
 .env
 .venv
 .idea
-app/static/*
+app/static/*.jpg
 
 env/
 venv/
@@ -19,3 +19,5 @@ venv.bak/
 
 app/__pycache__/*
 tests/__pychache__/*
+
+.coverage

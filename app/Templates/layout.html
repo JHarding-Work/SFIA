@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Site</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
 </head>
 <body>
-    <div class="container">
+    <nav class="navbar navbar-default font-impact" id="navbar">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/home">QA Cinemas</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/home">Home</a></li>
+            <li><a href="/listings">Listings</a></li>
+            <li><a href="/new releases">New Releases</a></li>
+            <li><a href="/ticket booking">Booking</a></li>
+            <li><a href="/opening times">Opening Times</a></li>
+                    <li><a href="/about us">About Us</a></li>
+            <li><a href="/contacts">Contact Us</a></li>
+            <li id="login_li"><a href="/login">Sign up/Log in</a></li>
+        </ul>
+    </nav>
+    <div class="container" style="background-color: rgb(216, 216, 216);">
         {% block body %}
         {% endblock body %}
     </div>

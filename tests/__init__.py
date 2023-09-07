@@ -1,11 +1,10 @@
 from flask_testing import TestCase
 from app import app, db
-from app.create import populate_db
 
 
 class TestBase(TestCase):
     def setUp(self) -> None:
-        populate_db()
+        pass
 
     def create_app(self):
         # Pass in testing configurations for the app.

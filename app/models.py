@@ -24,7 +24,7 @@ class Person(db.Model):
 class Film(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), nullable=False)
-    release_date = db.Column(db.DateTime)
+    release_date = db.Column(db.Date)
     description = db.Column(db.Text)
     image_src = db.Column(db.String(30), default="")
     director_id = db.Column(db.Integer, db.ForeignKey('person.id'))
@@ -54,13 +54,14 @@ class Transaction(db.Model):
 
 class Showing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    datetime = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
     film_id = db.Column(db.Integer, db.ForeignKey('film.id'), nullable=False)
     bookings = db.relationship("Booking", backref="showing")
 
     @property
     def formatted_time(self):
-        return f"{self.datetime.hour}:{self.datetime.minute:0<2}"
+        return f"{self.time.hour}:{self.time.minute:0<2}"
 
 
 class Booking(db.Model):
