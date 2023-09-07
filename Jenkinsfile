@@ -13,5 +13,11 @@ pipeline{
                     sh "python3 -m pytest --cov app --cov-report html"
                 }
             }
+            stage('Deploy Development Server'){
+                steps{
+                    sh "docker-compose down"
+                    sh "docker-compose up -d"
+                }
+            }
         }
 }
