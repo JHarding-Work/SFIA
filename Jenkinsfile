@@ -20,7 +20,7 @@ pipeline{
                 steps{
                     sh 'echo $SECRET_KEY'
                     sh 'sudo docker-compose down'
-                    sh 'sudo docker-compose --env-file ${SECRETS_FILE} up -d'
+                    sh 'sudo docker-compose --env-file $SECRETS_FILE up -d'
                 }
             }
         }
