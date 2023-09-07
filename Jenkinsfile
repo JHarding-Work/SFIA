@@ -22,7 +22,6 @@ pipeline{
                     sh 'ls /home/jenkins'
                     sh 'ls /home/jenkins/.jenkins'
                     sh 'ls /home/jenkins/.jenkins/workspace'
-                    sh 'ls /home/jenkins/.jenkins/workspace/Testing Pipeline'
                     sh "sudo docker-compose --env-file ${SECRETS_FILE} up -d"
                 }
             }
