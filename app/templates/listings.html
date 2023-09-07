@@ -2,6 +2,7 @@
 
 {% block body %}
     <form method="post">
+        {{ form.hidden_tag() }}
         {{ form.date.label }}: {{ form.date }} {{ form.submit }}
     </form>
     {% for film in films %}
