@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateField
-
+from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length,ValidationError
 
+from models import Film
 
 class LoginForm(FlaskForm):
     username = StringField('Username')
@@ -14,11 +14,6 @@ class SignUpForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=6, max=20)])
     password = StringField('Password', validators=[DataRequired(), Length(min=8)])
     submit = SubmitField('Sign up')
-
-
-class DateSelectForm(FlaskForm):
-    date = DateField("Date")
-    submit = SubmitField("Find")
 
     ##### Fix this Later #####
     def validate_password(self, password):
@@ -34,3 +29,16 @@ class DateSelectForm(FlaskForm):
                 if not(digits in password.data):
                     raise ValidationError("Password must include at least one number")
 
+
+class DateSelectForm(FlaskForm):
+    date = DateField("Date")
+    submit = SubmitField("Find")
+
+
+class BookingForm(FlaskForm):
+     movie = SelectField("Movie: ")
+     date = DateField("Date")
+     time = SelectField("Times: ")
+     no_of_adults = IntegerField("Number of Adult tickets")
+     no_of_child = IntegerField("Number of Child tickets")
+     submit = SubmitField("Confirm Order")
