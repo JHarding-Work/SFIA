@@ -56,6 +56,7 @@ class Showing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     time = db.Column(db.Time, nullable=False)
+    tickets = db.Column(db.Integer, default=0)
     film_id = db.Column(db.Integer, db.ForeignKey('film.id'), nullable=False)
     bookings = db.relationship("Booking", backref="showing")
 
