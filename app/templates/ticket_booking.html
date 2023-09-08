@@ -15,6 +15,15 @@
             {{ form.no_of_adult.label }} {{ form.no_of_adult(class="form-control", value="0") }}
             <br>
             {{ form.no_of_child.label }} {{ form.no_of_child(class="form-control", value="0") }}
+            
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='no_of_child' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+            
             <br>
             {{ form.username.label }} {{ form.username(class="form-control") }}
             

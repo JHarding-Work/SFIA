@@ -146,5 +146,4 @@ def ticket_booking():
                     )
                     db.session.add(new_booking)
                     db.session.commit()
-    print(form.errors.items())
     return render_template('ticket_booking.html',form=form)
