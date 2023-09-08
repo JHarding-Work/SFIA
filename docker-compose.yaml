@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  database:
-    container_name: database
-    image: mysql:latest
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
     environment:
       MYSQL_DATABASE: flask-db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -11,7 +11,7 @@ services:
   flask-app:
     build: .
     depends_on:
-      - database
+      - mysql
     networks:
       - mynetwork
     environment:
