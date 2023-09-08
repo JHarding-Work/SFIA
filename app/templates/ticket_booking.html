@@ -17,9 +17,26 @@
             {{ form.no_of_child.label }} {{ form.no_of_child(class="form-control", value="0") }}
             <br>
             {{ form.username.label }} {{ form.username(class="form-control") }}
-            {{ form.username.errors }}
+            
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='username' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+
             <br>
             {{ form.password.label }} {{ form.password(class="form-control") }}
+            
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='password' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+            
             <br>
             {{ form.submit(class="form-control") }}
         </form>

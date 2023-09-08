@@ -8,7 +8,7 @@
 
             {{ form.username.label }} {{ form.username(class="form-control", id="usernametbx") }}
             {% for field, errors in form.errors.items() %}
-            <small class="form-text text-muted error">
+            <small class="form-text text-muted ">
                 {% if field=='username' %}
                     {{ ', '.join(errors) }}
                 {% endif %}

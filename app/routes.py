@@ -120,11 +120,15 @@ def ticket_booking():
         return render_template('ticket_booking.html',form=form)
     
     elif form.submit.data:
-        adult_ticket = form.no_of_adult.data
-        child_ticket = form.no_of_child.data
-        showingbackref = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.time.data).first()
-
+        
+        showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
+        form.time.choices = [(i.time,i.time) for i in showing_list]
+        
         if form.validate_on_submit():
+            adult_ticket = form.no_of_adult.data
+            child_ticket = form.no_of_child.data
+            showingbackref = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.time.data).first()
+            
             if Customer.query.filter_by(username=form.username.data).count() == 1:
                 customer = Customer.query.filter_by(username=form.username.data).first()
 
@@ -142,5 +146,5 @@ def ticket_booking():
                     )
                     db.session.add(new_booking)
                     db.session.commit()
-
+    print(form.errors.items())
     return render_template('ticket_booking.html',form=form)
