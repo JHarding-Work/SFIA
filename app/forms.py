@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
 from flask_bcrypt import check_password_hash
-from app.models import Customer
+from app.models import Customer, Showing, Film
 
 
 class LoginForm(FlaskForm):
@@ -64,4 +64,17 @@ class BookingForm(FlaskForm):
         if customer:
             if not check_password_hash(customer.password, password.data):
                 raise ValidationError(message="Password is Incorrect, please try again.")
+
+    def validate_no_of_child(self, no_of_child):
+        film = Film.query.filter_by(id=self.movie.data).first()
+        show = Showing.query.filter_by(film_id=film.id,date=self.date.data,time=self.time.data).first()
+        
+        print(show.tickets)
+        print(film)
+        print(self.no_of_adult.data)
+        print(no_of_child.data)
+
+        if show.tickets < (self.no_of_adult.data + no_of_child.data):
+            print("we made it!")
+            raise ValidationError(message=f"Please select less tickets, only {show.tickets} are avaiable.")
         

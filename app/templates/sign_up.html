@@ -17,6 +17,7 @@
             <br>
             <br>
             {{ form.password.label }} {{ form.password(class="form-control", id="password") }}
+          
             {% for field, errors in form.errors.items() %}
             <small class="form-text text-muted error">
                 {% if field=='password' %}
@@ -24,6 +25,7 @@
                 {% endif %}
             </small>
             {% endfor %}
+          
             <br>
             <br>
             {{ form.submit(class="form-control", id="logupsubmit") }}

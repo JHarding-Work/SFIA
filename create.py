@@ -17,15 +17,15 @@ toy = Film(title="Toy Story", actors=[john, louise], image_src="toy_story.jpg", 
 
 for d in range(5, 14):
     for n in 11, 14:
-        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer)
+        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer, tickets=123)
 
 
 for d in range(13, 24):
     for n in 9, 13, 17:
-        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer)
+        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer, tickets=32)
 
     for n in 11, 15:
-        Showing(date=date(2023, 9, d), time=time(n, 0), film=blue)
+        Showing(date=date(2023, 9, d), time=time(n, 0), film=blue, tickets=12)
 
 
 Showing(date=date(2023, 9, 25), time=time(11, 0), film=lord_of_the_rings)
