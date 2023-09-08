@@ -17,18 +17,18 @@ class SignUpForm(FlaskForm):
     submit = SubmitField('Sign up')
 
     ##### Fix this Later #####
-    def validate_password(self, password):
-
-            special_char = ['!','£','$','%','^','&','*','(',')',';',':']
-            digits = list(i for i in range(0,10))
-
-            for i in special_char:
-                if not(i in password.data):
-                    raise ValidationError(f"Password must include one special character from {special_char}")
-
-            for i in digits:
-                if not(digits in password.data):
-                    raise ValidationError("Password must include at least one number")
+#    def validate_password(self, password):
+#
+#            special_char = ['!','£','$','%','^','&','*','(',')',';',':']
+#            digits = list(i for i in range(0,10))
+#
+#            for i in special_char:
+#                if not(i in password.data):
+#                    raise ValidationError(f"Password must include one special character from {special_char}")
+#
+#            for i in digits:
+#                if not(digits in password.data):
+#                    raise ValidationError("Password must include at least one number")
 
 
 class DateSelectForm(FlaskForm):
@@ -41,6 +41,8 @@ class BookingForm(FlaskForm):
      search = SubmitField("Search")
      date = DateField("Date")
      time = SelectField("Times: ")
+     username = StringField("Username: ")
+     password = StringField("Password: ")
      no_of_adult = IntegerField("Number of Adult tickets")
      no_of_child = IntegerField("Number of Child tickets")
      submit = SubmitField("Confirm Order")
