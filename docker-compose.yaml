@@ -2,12 +2,8 @@ version: "3.8"
 services:
   flask-app:
     build: .
-    ports:
-    - target: 5000
-      published: 5000
-      protocol: tcp
     environment:
-      SQLALCHEMY_DATABASE_URI: sqlite:///data.sqlite
+      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
       SECRET_KEY: ${SECRET_KEY}
     networks:
       - network
