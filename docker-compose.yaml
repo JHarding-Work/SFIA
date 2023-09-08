@@ -24,7 +24,6 @@ services:
     ports:
     - target: 80
       published: 80
-      protocol: tcp
     volumes:
     - type: bind
       source: ./nginx.conf
