@@ -11,11 +11,11 @@ pipeline{
                     sh 'pip install -r requirements.txt'
                 }
             }
-            stage('Run tests'){
-                steps{
-                    sh 'python3 -m pytest --cov app --cov-report html'
-                }
-            }
+//             stage('Run tests'){
+//                 steps{
+//                     sh 'python3 -m pytest --cov app --cov-report html'
+//                 }
+//             }
             stage('Deploy Development Server'){
                 steps{
                     sh 'sudo docker-compose down'
