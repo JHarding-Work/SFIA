@@ -1,9 +1,17 @@
 version: "3.8"
 services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: flask-db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      - mynetwork
   flask-app:
+    image: flask-app:latest
     build: .
     environment:
-      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
     networks:
       - network
