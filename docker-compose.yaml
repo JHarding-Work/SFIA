@@ -5,7 +5,7 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: flask-db
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: password
     networks:
       - mynetwork
   flask-app:
