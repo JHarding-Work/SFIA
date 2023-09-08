@@ -1,34 +1,32 @@
-version: "3.8"
+version: '3.8'
 services:
   mysql:
     build: ./db
     environment:
       MYSQL_DATABASE: flask-db
-      MYSQL_ROOT_PASSWORD: Password
+      MYSQL_ROOT_PASSWORD: password123
     networks:
-      - network
+      - mynetwork
   flask-app:
-    image: flask-app:latest
     build: .
     depends_on:
       - mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: Password
-      SECRET_KEY: ${SECRET_KEY}
     networks:
-      - network
+      - mynetwork
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
   nginx:
     image: nginx:latest
+    ports:
+      - target: 80
+        published: 80
     depends_on:
       - flask-app
-    ports:
-    - target: 80
-      published: 80
     volumes:
-    - type: bind
-      source: ./nginx.conf
-      target: /etc/nginx/nginx.conf
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
     networks:
-        - network
+      - mynetwork
 networks:
-  network:
+  mynetwork:
