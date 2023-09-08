@@ -37,7 +37,7 @@ def signup():
             customer = Customer(
                 username=form.username.data,
                 password=bcrypt.generate_password_hash(form.password.data)
-        )
+            )
             db.session.add(customer)
             db.session.commit()
 
@@ -109,12 +109,31 @@ def ticket_booking():
     form.movie.choices = [(i.id,i.title) for i in films_list]
 
     if form.search.data:
-        print(form.movie.data)
         showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
         form.time.choices = [(i.time,i.time) for i in showing_list]
 
         return render_template('ticket_booking.html',form=form)
+    
     elif form.submit.data:
-        pass
+        adult_ticket = form.no_of_adult.data
+        child_ticket = form.no_of_child.data
+        showingbackref = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.time.data).first()
+   
+        if Customer.query.filter_by(username=form.username.data).count() == 1:
+            customer = Customer.query.filter_by(username=form.username.data).first()
+
+            if bcrypt.check_password_hash(customer.password, form.password.data):
+                
+                new_transaction = Transaction(customer=customer.id)  
+                db.session.add(new_transaction)
+                db.session.commit()
+                
+                new_booking = Booking(
+                    child_ticket=child_ticket,
+                    adult_ticket=adult_ticket,
+                    transaction=new_transaction,
+                    showing=showingbackref
+                )
+                db.session.add(new_booking)
 
     return render_template('ticket_booking.html',form=form)
