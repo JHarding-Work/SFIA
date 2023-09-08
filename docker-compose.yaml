@@ -6,10 +6,12 @@ services:
       MYSQL_DATABASE: flask-db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
-      - mynetwork
+      - network
   flask-app:
     image: flask-app:latest
     build: .
+    depends_on:
+      - mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
@@ -17,6 +19,8 @@ services:
       - network
   nginx:
     image: nginx:latest
+    depends_on:
+      - flask-app
     ports:
     - target: 80
       published: 80
