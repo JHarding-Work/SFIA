@@ -4,7 +4,7 @@ services:
     build: ./db
     environment:
       MYSQL_DATABASE: flask-db
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: Password
     networks:
       - network
   flask-app:
@@ -13,7 +13,7 @@ services:
     depends_on:
       - mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: Password
       SECRET_KEY: ${SECRET_KEY}
     networks:
       - network
