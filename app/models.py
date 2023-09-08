@@ -48,6 +48,7 @@ class Customer(db.Model):
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    is_complete = db.Column(db.Boolean, default=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     bookings = db.relationship("Booking", backref="transaction")
 

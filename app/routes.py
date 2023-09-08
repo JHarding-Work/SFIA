@@ -125,7 +125,7 @@ def ticket_booking():
 
             if bcrypt.check_password_hash(customer.password, form.password.data):
                 
-                new_transaction = Transaction(customer=customer.id)  
+                new_transaction = Transaction(customer=customer)  
                 db.session.add(new_transaction)
                 db.session.commit()
                 
@@ -136,5 +136,6 @@ def ticket_booking():
                     showing=showingbackref
                 )
                 db.session.add(new_booking)
+                db.session.commit()
 
     return render_template('ticket_booking.html',form=form)
