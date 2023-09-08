@@ -39,6 +39,8 @@ class BookingForm(FlaskForm):
      search = SubmitField("Search")
      date = DateField("Date")
      time = SelectField("Times: ")
+     username = StringField("Username: ")
+     password = StringField("Password: ")
      no_of_adult = IntegerField("Number of Adult tickets")
      no_of_child = IntegerField("Number of Child tickets")
      submit = SubmitField("Confirm Order")
