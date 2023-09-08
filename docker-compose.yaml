@@ -6,7 +6,7 @@ services:
       MYSQL_DATABASE: flask-db
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
-      - mynetwork
+      - network
   flask-app:
     image: flask-app:latest
     build: .
