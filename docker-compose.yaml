@@ -5,25 +5,21 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_DATABASE: flask-db
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
       - mynetwork
   flask-app:
     build: .
-    depends_on:
-      - mysql
     networks:
       - mynetwork
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
   nginx:
     image: nginx:latest
     ports:
       - target: 80
         published: 80
-    depends_on:
-      - flask-app
     volumes:
       - type: bind
         source: ./nginx.conf
