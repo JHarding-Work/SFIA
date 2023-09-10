@@ -7,9 +7,25 @@
             {{ form.hidden_tag() }}
 
             {{ form.username.label }} {{ form.username(class="form-control", id="usernametbx") }}
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted ">
+                {% if field=='username' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
             <br>
             <br>
             {{ form.password.label }} {{ form.password(class="form-control", id="password") }}
+          
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='password' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+          
             <br>
             <br>
             {{ form.submit(class="form-control", id="logupsubmit") }}

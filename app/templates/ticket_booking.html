@@ -1,7 +1,56 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div>
-    this is the ticket booking page
+<div class="form">
+    <fieldset>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.movie.label }} {{ form.movie(class="form-control", id="movielst") }}
+            <br>
+            {{ form.date.label }} {{ form.date(class="form-control", id="datetb") }}
+            {{ form.search(class="form-control",formnovalidate="True") }}
+            <br>
+            {{ form.time.label }} {{ form.time(class="form-control", id="timelst") }}
+            <br>
+            {{ form.no_of_adult.label }} {{ form.no_of_adult(class="form-control", value="0") }}
+            <br>
+            {{ form.no_of_child.label }} {{ form.no_of_child(class="form-control", value="0") }}
+            
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='no_of_child' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+            
+            <br>
+            {{ form.username.label }} {{ form.username(class="form-control") }}
+            
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='username' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+
+            <br>
+            {{ form.password.label }} {{ form.password(class="form-control") }}
+            
+            {% for field, errors in form.errors.items() %}
+            <small class="form-text text-muted error">
+                {% if field=='password' %}
+                    {{ ', '.join(errors) }}
+                {% endif %}
+            </small>
+            {% endfor %}
+            
+            <br>
+            {{ form.submit(class="form-control") }}
+        </form>
+    </fieldset>
 </div>
+<script src="{{ url_for('static', filename='booking.js') }}"></script>
+
 {% endblock %}

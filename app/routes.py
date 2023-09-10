@@ -2,7 +2,7 @@ from app import app, bcrypt
 from app.models import *
 from app.forms import *
 
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 from flask import redirect, url_for, render_template, request
 
 
@@ -31,15 +31,19 @@ def login():
 @app.route('/sign up', methods=["GET", "POST"])
 def signup():
     form = SignUpForm()
-
+    
     if request.method == 'POST':
+        print(form.validate_on_submit())
         if form.validate_on_submit():
             customer = Customer(
                 username=form.username.data,
                 password=bcrypt.generate_password_hash(form.password.data)
-        )
+            )
             db.session.add(customer)
             db.session.commit()
+        else:
+            print(form.errors)
+
 
     return render_template('sign_up.html', form=form)
 
@@ -101,6 +105,45 @@ def new_releases():
         form=form
     )
 
-@app.route('/ticket booking')
+
+@app.route('/ticket booking', methods=['GET', 'POST'])
 def ticket_booking():
-    return render_template('ticket_booking.html')
+    form = BookingForm(request.form)
+
+    films_list = Film.query.all()
+    form.movie.choices = [(i.id, i.title) for i in films_list]
+
+    if form.search.data:
+        showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
+        form.time.choices = [(i.time,i.time) for i in showing_list]
+
+        return render_template('ticket_booking.html',form=form)
+    
+    elif form.submit.data:
+        
+        showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
+        form.time.choices = [(i.time,i.time) for i in showing_list]
+        
+        if form.validate_on_submit():
+            adult_ticket = form.no_of_adult.data
+            child_ticket = form.no_of_child.data
+            showingbackref = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.time.data).first()
+            
+            if Customer.query.filter_by(username=form.username.data).count() == 1:
+                customer = Customer.query.filter_by(username=form.username.data).first()
+
+                if bcrypt.check_password_hash(customer.password, form.password.data):
+                
+                    new_transaction = Transaction(customer=customer)  
+                    db.session.add(new_transaction)
+                    db.session.commit()
+                
+                    new_booking = Booking(
+                        child_ticket=child_ticket,
+                        adult_ticket=adult_ticket,
+                        transaction=new_transaction,
+                        showing=showingbackref
+                    )
+                    db.session.add(new_booking)
+                    db.session.commit()
+    return render_template('ticket_booking.html',form=form)
