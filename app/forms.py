@@ -1,11 +1,9 @@
-import os
-
-from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
 from flask_bcrypt import check_password_hash
-from app.models import Customer, Showing, Film
+
+from models import Customer, Showing, Film
 
 
 class LoginForm(FlaskForm):

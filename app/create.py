@@ -1,5 +1,5 @@
 from app import app, bcrypt
-from app.models import *
+from models import *
 from datetime import date, time
 
 john = Person(first_name="John", last_name="Actor")

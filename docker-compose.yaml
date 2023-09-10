@@ -9,13 +9,13 @@ services:
     networks:
       - mynetwork
   flask-app:
-    build: .
+    build: ./app
     depends_on:
       - mysql
     networks:
       - mynetwork
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: password
       SECRET_KEY: ${SECRET_KEY}
   nginx:
     image: nginx:latest
