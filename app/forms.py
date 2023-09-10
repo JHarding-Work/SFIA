@@ -1,6 +1,5 @@
 import os
 
-from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
@@ -68,13 +67,7 @@ class BookingForm(FlaskForm):
     def validate_no_of_child(self, no_of_child):
         film = Film.query.filter_by(id=self.movie.data).first()
         show = Showing.query.filter_by(film_id=film.id,date=self.date.data,time=self.time.data).first()
-        
-        print(show.tickets)
-        print(film)
-        print(self.no_of_adult.data)
-        print(no_of_child.data)
 
         if show.tickets < (self.no_of_adult.data + no_of_child.data):
-            print("we made it!")
             raise ValidationError(message=f"Please select less tickets, only {show.tickets} are avaiable.")
         
