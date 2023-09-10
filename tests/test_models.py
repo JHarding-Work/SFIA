@@ -1,6 +1,6 @@
 from app import app
 from tests import TestBase
-from app.models import *
+from models import *
 
 from datetime import date, time
 

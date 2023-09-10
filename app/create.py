@@ -1,6 +1,8 @@
 from app import app, bcrypt
 from models import *
 from datetime import date, time
+from time import sleep
+from pymysql import OperationalError
 
 john = Person(first_name="John", last_name="Actor")
 sarah = Person(first_name="Sarah", last_name="Performer")
@@ -33,6 +35,18 @@ Showing(date=date(2023, 9, 25), time=time(15, 0), film=toy)
 
 
 customer = Customer(username="John Buyer", password="Password")
+
+
+def populate_with_retries(retries):
+    try:
+        populate_db()
+
+    except OperationalError:
+        if n > 0:
+            sleep(5)
+            populate_with_retries(retries-1)
+        else:
+            raise
 
 
 def populate_db():
