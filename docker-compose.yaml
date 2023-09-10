@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
   flask-app:
-    build: ./app
+    build: .
     depends_on:
       - mysql
     networks:
