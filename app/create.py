@@ -1,4 +1,4 @@
-from app import app
+from app import app, bcrypt
 from models import *
 from datetime import date, time
 from time import sleep
@@ -34,7 +34,7 @@ Showing(date=date(2023, 9, 25), time=time(11, 0), film=lord_of_the_rings)
 Showing(date=date(2023, 9, 25), time=time(15, 0), film=toy)
 
 
-customer = Customer(username="John Buyer", password="Password")
+customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
 
 
 def populate_with_retries(retries):

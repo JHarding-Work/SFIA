@@ -16,16 +16,17 @@ def home():
 def login():
     form = LoginForm()
 
+    message = None
+
     if request.method == 'POST':
-        if Customer.query.filter_by(username=form.username.data).count() == 1:
-            customer = Customer.query.filter_by(username=form.username.data).first()
+        customer = Customer.query.filter_by(username=form.username.data).first()
 
-            if bcrypt.check_password_hash(customer.password, form.password.data):
-                print("logged in")
+        if customer and customer.check_password(form.password.data):
+            message = "Logged In."
         else:
-            print("Failed to login")
+            message = "Failed to Log In"
 
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, message=message)
 
 
 @app.route('/sign up', methods=["GET", "POST"])
