@@ -1,6 +1,6 @@
 from flask_testing import TestCase
-from app import app, db
-from app.models import *
+from app import app
+from models import *
 from datetime import date, time
 
 

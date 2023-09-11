@@ -24,3 +24,5 @@ tests/__pychache__/*
 .coverage
 tests/__pycache__/__init__.cpython-311.pyc
 tests/__pycache__/test_models.cpython-311-pytest-7.4.0.pyc
+
+variables.env

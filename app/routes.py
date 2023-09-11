@@ -1,6 +1,6 @@
 from app import app, bcrypt
-from app.models import *
-from app.forms import *
+from models import *
+from forms import *
 
 from datetime import datetime, timedelta
 from flask import redirect, url_for, render_template, request
