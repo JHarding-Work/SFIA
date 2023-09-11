@@ -22,7 +22,7 @@ def login():
         customer = Customer.query.filter_by(username=form.username.data).first()
 
         if customer and customer.check_password(form.password.data):
-            message = "Logged In."
+            message = "Logged In"
         else:
             message = "Failed to Log In"
 

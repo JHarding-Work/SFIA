@@ -2,7 +2,7 @@ from datetime import date, time
 
 from flask import url_for
 
-from app import db
+from app import db, bcrypt
 from models import Customer, Film, Showing
 from tests import TestBase
 
@@ -146,3 +146,25 @@ class TestFilm(TestBase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('src="/static/TestImage"', str(response.data))
+
+
+class TestLogin(TestBase):
+    def setUpTestData(self):
+        self.customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
+        db.session.add(self.customer)
+        db.session.commit()
+
+    def test_login(self):
+        response = self.client.post('/login', data=dict(username="John Buyer", password="Password"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Logged In', response.data)
+
+    def test_bad_username(self):
+        response = self.client.post('/login', data=dict(username="John B", password="Password"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Failed to Log In', response.data)
+
+    def test_bad_password(self):
+        response = self.client.post('/login', data=dict(username="John Buyer", password="password"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Failed to Log In', response.data)
