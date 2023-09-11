@@ -7,12 +7,12 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 
-if password := os.getenv("MYSQL_ROOT_PASSWORD"):
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:{os.getenv("MYSQL_ROOT_PASSWORD")}@mysql:3306/flask-db'
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("MYSQL_DATABASE_URI")
+mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD')
+mysql_database_uri = f'mysql+pymysql://root:{mysql_root_password}@mysql:3306/flask-db'
 
+supplied_uri = os.getenv('SQLALCHEMY_DATABASE_URI')
 
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_database_uri if mysql_root_password else supplied_uri
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 db = SQLAlchemy(app)
