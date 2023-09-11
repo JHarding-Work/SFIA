@@ -49,8 +49,8 @@ class BookingForm(FlaskForm):
     time = SelectField("Times: ", validators=[DataRequired()])
     username = StringField("Username: ", validators=[DataRequired()])
     password = StringField("Password: ", validators=[DataRequired()])
-    no_of_adult = IntegerField("Number of Adult tickets", validators=[DataRequired()])
-    no_of_child = IntegerField("Number of Child tickets", validators=[DataRequired()])
+    no_of_adult = IntegerField("Number of Adult tickets", validators=[])
+    no_of_child = IntegerField("Number of Child tickets", validators=[])
     submit = SubmitField("Confirm Order")
 
     def validate_username(self, username):
@@ -68,7 +68,7 @@ class BookingForm(FlaskForm):
 
     def validate_no_of_child(self, no_of_child):
         film = Film.query.filter_by(id=self.movie.data).first()
-        show = Showing.query.filter_by(film_id=film.id,date=self.date.data,time=self.time.data).first()
+        show = Showing.query.filter_by(film_id=self.movie.data,date=self.date.data,time=self.time.data).first()
 
         if show.tickets < (self.no_of_adult.data + no_of_child.data):
             raise ValidationError(message=f"Please select less tickets, only {show.tickets} are avaiable.")

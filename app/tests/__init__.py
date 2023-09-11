@@ -1,7 +1,9 @@
-from flask_testing import TestCase
 from app import app
 from models import *
 
+from flask_testing import TestCase
+from datetime import date, time
+from flask_bcrypt import generate_password_hash 
 
 class TestBase(TestCase):
     SQLALCHEMY_DATABASE_URI = "sqlite:///flask-db.db"
