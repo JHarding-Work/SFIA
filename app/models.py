@@ -1,5 +1,4 @@
-from app import db
-
+from app import db, bcrypt
 
 actor_film = db.Table(
     "actor_film",
@@ -44,6 +43,9 @@ class Customer(db.Model):
     city = db.Column(db.String(30))
     postcode = db.Column(db.String(8))
     transactions = db.relationship("Transaction", backref="customer")
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
 
 class Transaction(db.Model):

@@ -4,7 +4,6 @@ from flask import url_for
 from datetime import date, time
 from flask_bcrypt import generate_password_hash
 
-from app import db
 from models import *
 from tests import TestBase
 
@@ -53,7 +52,7 @@ class TestGet(TestBase):
         stephenson = Person(first_name="Stephen", last_name="Son")
         john_d = Person(first_name="John", last_name="Director")
         oppenheimer = Film(title="Oppenheimer", director=john_d, actors=[stephenson, sarah], image_src="oppenheimer.jpg", release_date=date(2023,9,6))
-        
+
         films = Film.query.all()
         for film in films:
             response = self.client.get(f'/film/{film.id}')
@@ -98,16 +97,16 @@ class TestPost(TestBase):
         response = self.client.post(url_for('signup'), data=dict(username='Athena', password='pass001!'))
         obj1 = Customer.query.filter_by(username='Athena').count()
         self.assertEqual(obj1, 1)
-        
+
     def test_ticket_booking_post(self):
-        
+
         customer=Customer(username='Billy1010',password=generate_password_hash('password123!'))
         customer2=Customer(username='Billy101010',password=generate_password_hash('password123!'))
         sarah = Person(first_name="Sarah", last_name="Performer")
         stephenson = Person(first_name="Stephen", last_name="Son")
         john_d = Person(first_name="John", last_name="Director")
         oppenheimer = Film(title="Oppenheimer", director=john_d, actors=[stephenson, sarah], image_src="oppenheimer.jpg", release_date=date(2023,9,6))
-        
+
         for d in range(5, 14):
             for n in 11, 14:
                 Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer, tickets=123)
@@ -115,8 +114,8 @@ class TestPost(TestBase):
         db.session.commit()
 
         #base test
-        response = self.client.post(url_for('ticket_booking'), 
-                                    data=dict(movie=1, 
+        response = self.client.post(url_for('ticket_booking'),
+                                    data=dict(movie=1,
                                             date=date(2023, 9, 13),
                                             time= time(11,0),
                                             username='Billy1010',
@@ -130,8 +129,8 @@ class TestPost(TestBase):
         self.assertEqual(obj1, 1)
 
         #incorrect username
-        response = self.client.post(url_for('ticket_booking'), 
-                                        data=dict(movie=1, 
+        response = self.client.post(url_for('ticket_booking'),
+                                        data=dict(movie=1,
                                             date=date(2023, 9, 13),
                                             time= time(11,0),
                                             username='Billy111111',
@@ -143,10 +142,10 @@ class TestPost(TestBase):
                                             ))
         obj1 = Transaction.query.filter_by(customer_id=customer2.id).first()
         self.assertEqual(type(obj1), type(None))
-        
+
         #incorrect password
-        response = self.client.post(url_for('ticket_booking'), 
-                                        data=dict(movie=1, 
+        response = self.client.post(url_for('ticket_booking'),
+                                        data=dict(movie=1,
                                             date=date(2023, 9, 13),
                                             time= time(11,0),
                                             username='Billy101010',
@@ -160,8 +159,8 @@ class TestPost(TestBase):
         self.assertEqual(type(obj1), type(None))
 
         #booking too many tickets
-        response = self.client.post(url_for('ticket_booking'), 
-                                        data=dict(movie=1, 
+        response = self.client.post(url_for('ticket_booking'),
+                                        data=dict(movie=1,
                                             date=date(2023, 9, 13),
                                             time= time(11,0),
                                             username='Billy101010',
@@ -227,4 +226,24 @@ class TestFilm(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('src="/static/TestImage"', str(response.data))
 
-    
+
+class TestLogin(TestBase):
+    def setUpTestData(self):
+        self.customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
+        db.session.add(self.customer)
+        db.session.commit()
+
+    def test_login(self):
+        response = self.client.post('/login', data=dict(username="John Buyer", password="Password"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Logged In', response.data)
+
+    def test_bad_username(self):
+        response = self.client.post('/login', data=dict(username="John B", password="Password"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Failed to Log In', response.data)
+
+    def test_bad_password(self):
+        response = self.client.post('/login', data=dict(username="John Buyer", password="password"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Failed to Log In', response.data)

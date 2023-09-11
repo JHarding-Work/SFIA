@@ -56,3 +56,14 @@ class TestPerson(TestBase):
 
     def test_fullname(self):
         self.assertEqual("Sarah Performer", self.sarah.fullname)
+
+
+class TestCustomer(TestBase):
+    def setUpTestData(self):
+        self.customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
+
+    def test_check_password_match(self):
+        self.assertTrue(self.customer.check_password("Password"))
+
+    def test_check_password_non_match(self):
+        self.assertFalse(self.customer.check_password("password"))
