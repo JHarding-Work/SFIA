@@ -33,7 +33,6 @@ def signup():
     form = SignUpForm()
     
     if request.method == 'POST':
-        print(form.validate_on_submit())
         if form.validate_on_submit():
             customer = Customer(
                 username=form.username.data,
