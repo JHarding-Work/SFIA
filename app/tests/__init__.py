@@ -18,9 +18,9 @@ class TestBase(TestCase):
 
     def setUp(self) -> None:
         db.create_all()
-        self.setUpData()
+        self.setUpTestData()
 
-    def setUpData(self):
+    def setUpTestData(self):
         pass
 
     # Will be called after every test

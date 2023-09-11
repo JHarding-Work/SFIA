@@ -109,7 +109,7 @@ class TestHome(TestBase):
 
 
 class TestListings(TestBase):
-    def setUpData(self) -> None:
+    def setUpTestData(self) -> None:
         self.oppenheimer = Film(title="Oppenheimer")
         self.showing1 = Showing(date=date(2023, 9, 15), time=time(11, 00), film=self.oppenheimer)
         self.showing2 = Showing(date=date(2023, 9, 18), time=time(14, 15), film=self.oppenheimer)
@@ -132,3 +132,17 @@ class TestListings(TestBase):
         self.assertIn(b'Oppenheimer', response.data)
         self.assertNotIn(b'11:00', response.data)
         self.assertIn(b'14:15', response.data)
+
+
+class TestFilm(TestBase):
+    def setUpTestData(self) -> None:
+        self.oppenheimer = Film(title="Oppenheimer", image_src="TestImage")
+
+        db.session.add(self.oppenheimer)
+        db.session.commit()
+
+    def test_get(self):
+        response = self.client.get('/film/1')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('src="/static/TestImage"', str(response.data))
