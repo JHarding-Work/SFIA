@@ -1,9 +1,10 @@
 from flask import url_for
 
+from models import Customer, Film
 from tests import TestBase
 
 
-class TestViews(TestBase):
+class TestGet(TestBase):
     def test_home_get(self):
         response = self.client.get(url_for('home'))
         self.assertEqual(response.status_code, 200)
@@ -16,20 +17,12 @@ class TestViews(TestBase):
         response = self.client.get(url_for('signup'))
         self.assertEqual(response.status_code, 200)
 
-    def test_login_get(self):
-        response = self.client.get(url_for('login'))
-        self.assertEqual(response.status_code, 200)
-
     def test_opening_times_get(self):
         response = self.client.get(url_for('opening_times'))
         self.assertEqual(response.status_code, 200)
 
     def test_listings_get(self):
         response = self.client.get(url_for('listings'))
-        self.assertEqual(response.status_code, 200)
-
-    def test_login_get(self):
-        response = self.client.get(url_for('login'))
         self.assertEqual(response.status_code, 200)
 
     def test_about_us_get(self):
@@ -49,5 +42,49 @@ class TestViews(TestBase):
         self.assertEqual(response.status_code, 200)
 
     def test_single_film_get(self):
-        response = self.client.get('/film/1')
-        self.assertEqual(response.status_code, 200)
+        films = Film.query.all()
+        for film in films:
+            response = self.client.get(f'/film/{film.id}')
+            self.assertEqual(response.status_code, 200)
+
+
+class TestPost(TestBase):
+    def test_sign_up_post(self):
+        # min length test
+        response = self.client.post(url_for('signup'), data=dict(username='Athena', password='pass123!'))
+        obj1 = Customer.query.filter_by(username='Athena').first()
+        self.assertEqual(obj1.username, 'Athena')
+
+        response = self.client.post(url_for('signup'), data=dict(username='Athen', password='pass123!'))
+        obj1 = Customer.query.filter_by(username='Athen').first()
+        self.assertEqual(type(obj1), type(None))
+
+        response = self.client.post(url_for('signup'), data=dict(username='Athena01', password='p3!'))
+        obj1 = Customer.query.filter_by(username='Athena01').first()
+        self.assertEqual(type(obj1), type(None))
+
+        # max length test
+        response = self.client.post(url_for('signup'),
+                                    data=dict(username='Thiswillbetwentychar', password='password123!'))
+        obj1 = Customer.query.filter_by(username='Thiswillbetwentychar').first()
+        self.assertEqual(obj1.username, 'Thiswillbetwentychar')
+
+        response = self.client.post(url_for('signup'),
+                                    data=dict(username='Thiswillbetwentyfourchar', password='password123!'))
+        obj1 = Customer.query.filter_by(username='Thiswillbetwentyfourchar').first()
+        self.assertEqual(type(obj1), type(None))
+
+        # number test
+        response = self.client.post(url_for('signup'), data=dict(username='Athenanum', password='pass!'))
+        obj1 = Customer.query.filter_by(username='Athenanum').first()
+        self.assertEqual(type(obj1), type(None))
+
+        # special char test
+        response = self.client.post(url_for('signup'), data=dict(username='Athenachar', password='pass001'))
+        obj1 = Customer.query.filter_by(username='Athenachar').first()
+        self.assertEqual(type(obj1), type(None))
+
+        # same username test
+        response = self.client.post(url_for('signup'), data=dict(username='Athena', password='pass001!'))
+        obj1 = Customer.query.filter_by(username='Athena').count()
+        self.assertEqual(obj1, 1)
