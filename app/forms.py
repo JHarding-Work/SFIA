@@ -15,7 +15,7 @@ class LoginForm(FlaskForm):
 
 class SignUpForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=6, max=20)])
-    password = StringField('Password', validators=[DataRequired(), Length(min=8)])
+    password = StringField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign up')
 
     def validate_username(self, username):
@@ -28,8 +28,11 @@ class SignUpForm(FlaskForm):
 
             special_char = ['!','£','$','%','^','&','*','(',')',';',':']
             digits = list(i for i in range(0,10))
+            print(password.data)
+            if len(password.data) < 8:
+                raise ValidationError(message="Password must be at least 8 characters long")
 
-            if not any(i in password.data for i in special_char):
+            elif not any(i in password.data for i in special_char):
                 raise ValidationError(message=f"Password must include one special character from {special_char}")
             elif not any(str(i) in password.data for i in digits):
                 raise ValidationError(message="Password must include at least one number")
