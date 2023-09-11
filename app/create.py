@@ -1,4 +1,4 @@
-from app import app, bcrypt
+from app import app
 from models import *
 from datetime import date, time
 from time import sleep
