@@ -13,7 +13,7 @@ services:
     networks:
       - mynetwork
     environment:
-      SQLALCHEMY_DATABASE_URI: mysql+pymysql://root:${MYSQL_ROOT_PASSWORD)}@mysql:3306/flask-db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
   nginx:
     image: nginx:latest
