@@ -2,7 +2,7 @@ from app import app, bcrypt
 from models import *
 from datetime import date, time
 from time import sleep
-from pymysql import OperationalError
+from sqlalchemy.exc import OperationalError
 
 john = Person(first_name="John", last_name="Actor")
 sarah = Person(first_name="Sarah", last_name="Performer")
