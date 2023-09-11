@@ -26,3 +26,7 @@ tests/__pycache__/__init__.cpython-311.pyc
 tests/__pycache__/test_models.cpython-311-pytest-7.4.0.pyc
 
 variables.env
+app/tests/__pycache__/__init__.cpython-311.pyc
+app/tests/__pycache__/test_create.cpython-311-pytest-7.4.0.pyc
+app/tests/__pycache__/test_models.cpython-311-pytest-7.4.0.pyc
+app/tests/__pycache__/test_views.cpython-311-pytest-7.4.0.pyc
