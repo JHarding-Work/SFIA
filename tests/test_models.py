@@ -104,7 +104,11 @@ class TestViews(TestBase):
     def test_ticket_booking_get(self):
         response = self.client.get(url_for('ticket_booking'))
         self.assertEqual(response.status_code, 200)  
-          
+    
+    def test_single_film_get(self):
+        response = self.client.get('/film/1')
+        self.assertEqual(response.status_code, 200)
+    
            
            
           
