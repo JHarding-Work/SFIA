@@ -1,4 +1,4 @@
-from app import app, bcrypt
+from app import app, bcrypt, db
 from models import *
 from forms import *
 
@@ -42,7 +42,6 @@ def signup():
             db.session.commit()
         else:
             print(form.errors)
-
 
     return render_template('sign_up.html', form=form)
 
