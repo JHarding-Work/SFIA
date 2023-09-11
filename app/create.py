@@ -45,7 +45,7 @@ def populate_with_retries(retries):
         populate_db()
 
     except OperationalError:
-        if n > 0:
+        if retries > 0:
             sleep(5)
             populate_with_retries(retries-1)
         else:

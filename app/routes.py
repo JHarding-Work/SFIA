@@ -1,9 +1,9 @@
-from app import app, bcrypt
+from app import app, bcrypt, db
 from models import *
 from forms import *
 
 from datetime import datetime, timedelta
-from flask import redirect, url_for, render_template, request
+from flask import render_template, request
 
 
 @app.route('/')
@@ -42,7 +42,6 @@ def signup():
             db.session.commit()
         else:
             print(form.errors)
-
 
     return render_template('sign_up.html', form=form)
 
@@ -93,10 +92,6 @@ def new_releases():
 
     lb = current_time - one_month
     ub = current_time + one_month
-    
-    print(current_time)
-    print(lb)
-    print(ub)
 
     return render_template(
         'listings.html',

@@ -19,11 +19,11 @@ class TestBase(TestCase):
         return app
 
     def setUp(self) -> None:
-        with app.app_context():
-            db.drop_all()
-            db.create_all()
+        db.create_all()
+        self.setUpTestData()
 
-
+    def setUpTestData(self):
+        pass
 
     # Will be called after every test
     def tearDown(self):
