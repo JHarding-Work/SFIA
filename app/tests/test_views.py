@@ -1,7 +1,12 @@
+from datetime import date, time
+
 from flask import url_for
 
-from models import Customer, Film
+from app import db
+from models import Customer, Film, Showing
 from tests import TestBase
+
+from unittest.mock import patch, Mock
 
 
 class TestGet(TestBase):
@@ -88,3 +93,42 @@ class TestPost(TestBase):
         response = self.client.post(url_for('signup'), data=dict(username='Athena', password='pass001!'))
         obj1 = Customer.query.filter_by(username='Athena').count()
         self.assertEqual(obj1, 1)
+
+
+class TestHome(TestBase):
+    def run_assertions(self, response):
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'navbar', response.data)
+        self.assertIn(b'<h1 class="font-impact">QA Cinemas</h1>', response.data)
+
+    def test_get_base(self):
+        self.run_assertions(self.client.get('/'))
+
+    def test_get_home(self):
+        self.run_assertions(self.client.get('/home'))
+
+
+class TestListings(TestBase):
+    def setUpData(self) -> None:
+        self.oppenheimer = Film(title="Oppenheimer")
+        self.showing1 = Showing(date=date(2023, 9, 15), time=time(11, 00), film=self.oppenheimer)
+        self.showing2 = Showing(date=date(2023, 9, 18), time=time(14, 15), film=self.oppenheimer)
+
+        db.session.add(self.oppenheimer)
+        db.session.commit()
+
+    def test_post(self):
+        response = self.client.post('/listings', data=dict(date='2023-9-15'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Oppenheimer', response.data)
+        self.assertIn(b'11:00', response.data)
+        self.assertNotIn(b'14:15', response.data)
+
+    @patch('routes.datetime')
+    def test_get(self, datetime: Mock):
+        datetime.now.return_value = Mock(date=lambda: date(2023, 9, 18))
+        response = self.client.get('/listings')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Oppenheimer', response.data)
+        self.assertNotIn(b'11:00', response.data)
+        self.assertIn(b'14:15', response.data)
