@@ -37,8 +37,7 @@ Showing(date=date(2023, 9, 25), time=time(15, 0), film=toy)
 
 
 customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
-customer=Customer(username='Billy1010',password=generate_password_hash('password123!'))
-
+customerb = Customer(username='Billy1010',password=generate_password_hash('password123!'))
 
 
 def populate_with_retries(retries):
@@ -57,7 +56,7 @@ def populate_db():
     with app.app_context():
         db.drop_all()
         db.create_all()
-        db.session.add_all([oppenheimer, blue, lord_of_the_rings, toy, customer])
+        db.session.add_all([oppenheimer, blue, lord_of_the_rings, toy, customer, customerb])
         db.session.commit()
 
 

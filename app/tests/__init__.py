@@ -13,6 +13,7 @@ class TestBase(TestCase):
         # Pass in testing configurations for the app.
         # Here we use sqlite without a persistent database for our tests.
         app.config.update(
+              SQLALCHEMY_DATABASE_URI="sqlite:///flask-db.db",
               SECRET_KEY='TEST_SECRET_KEY',
               DEBUG=True,
               WTF_CSRF_ENABLED=False

@@ -99,9 +99,8 @@ class TestPost(TestBase):
         self.assertEqual(obj1, 1)
 
     def test_ticket_booking_post(self):
-
-        customer=Customer(username='Billy1010',password=generate_password_hash('password123!'))
-        customer2=Customer(username='Billy101010',password=generate_password_hash('password123!'))
+        customer = Customer(username='Billy1010', password=generate_password_hash('password123!'))
+        customer2 = Customer(username='Billy101010', password=generate_password_hash('password123!'))
         sarah = Person(first_name="Sarah", last_name="Performer")
         stephenson = Person(first_name="Stephen", last_name="Son")
         john_d = Person(first_name="John", last_name="Director")
