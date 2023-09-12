@@ -42,6 +42,10 @@ class Customer(db.Model):
     address_line = db.Column(db.String(30))
     city = db.Column(db.String(30))
     postcode = db.Column(db.String(8))
+    card_name = db.Column(db.String(20))
+    card_no = db.Column(db.Integer())
+    card_exp = db.Column(db.String(5))
+    cvv = db.Column(db.Integer())
     transactions = db.relationship("Transaction", backref="customer")
 
     def check_password(self, password):

@@ -82,3 +82,13 @@ class BookingForm(FlaskForm):
         if show.tickets < (self.no_of_adult.data + no_of_child.data):
             raise ValidationError(message=f"Please select less tickets, only {show.tickets} are avaiable.")
         
+
+class PaymentForm(FlaskForm):
+    address_line = StringField('Address: ')
+    city = StringField('City: ')
+    postcode = StringField('Postcode: ')
+    card_name = StringField('Card Name:')
+    card_no = IntegerField('Card Number:')
+    card_exp = StringField('Card Expiration Date:')
+    cvv = IntegerField('cvv')
+    submit = SubmitField('Finalise Puchase')

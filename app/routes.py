@@ -3,7 +3,7 @@ from models import *
 from forms import *
 
 from datetime import datetime, timedelta, time
-from flask import render_template, request
+from flask import redirect,render_template, request
 
 
 @app.route('/')
@@ -132,9 +132,28 @@ def ticket_booking():
                 )
                 db.session.add(new_booking)
                 db.session.commit()
+                return redirect(f'/payments/{customer.id}')
 
     elif form.search.data:
         showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
         form.time.choices = [(i.time,i.time) for i in showing_list]
 
     return render_template('ticket_booking.html',form=form)
+
+@app.route('/payments/<int:cust_id>', methods=['GET', 'POST'])
+def payments(cust_id):
+    form = PaymentForm()
+
+    if form.validate_on_submit():
+        customer = Customer.query.filter_by(id=cust_id).first()
+        customer.address_line = form.address_line.data
+        customer.city = form.city.data
+        customer.postcode = form.postcode.data
+        customer.card_name = form.card_name.data
+        customer.card_no = form.card_no.data
+        customer.card_exp = form.card_exp.data
+        customer.cvv = form.cvv.data
+        db.session.commit()
+        #redirect('/payment success')
+
+    return render_template('payments.html',form=form)
