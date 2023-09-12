@@ -81,7 +81,7 @@ def contacts():
     return render_template('contacts.html')
 
 
-@app.route('/new releases')
+@app.route('/new releases', methods=['GET', 'POST'])
 def new_releases():
     form = DateSelectForm()
 
