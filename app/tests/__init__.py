@@ -1,10 +1,12 @@
+from app import app
+from models import *
+
 from flask_testing import TestCase
-from app import app, db
 
 
 class TestBase(TestCase):
-    def setUp(self) -> None:
-        pass
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
+    TESTING = True
 
     def create_app(self):
         # Pass in testing configurations for the app.
@@ -16,6 +18,13 @@ class TestBase(TestCase):
               WTF_CSRF_ENABLED=False
         )
         return app
+
+    def setUp(self) -> None:
+        db.create_all()
+        self.setUpTestData()
+
+    def setUpTestData(self):
+        pass
 
     # Will be called after every test
     def tearDown(self):

@@ -1,11 +1,11 @@
-import os
+from datetime import time
 
-from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
 from flask_bcrypt import check_password_hash
-from app.models import Customer, Showing, Film
+
+from models import Customer, Showing, Film
 
 
 class LoginForm(FlaskForm):
@@ -16,7 +16,7 @@ class LoginForm(FlaskForm):
 
 class SignUpForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=6, max=20)])
-    password = StringField('Password', validators=[DataRequired(), Length(min=8)])
+    password = StringField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign up')
 
     def validate_username(self, username):
@@ -29,8 +29,11 @@ class SignUpForm(FlaskForm):
 
             special_char = ['!','£','$','%','^','&','*','(',')',';',':']
             digits = list(i for i in range(0,10))
+            print(password.data)
+            if len(password.data) < 8:
+                raise ValidationError(message="Password must be at least 8 characters long")
 
-            if not any(i in password.data for i in special_char):
+            elif not any(i in password.data for i in special_char):
                 raise ValidationError(message=f"Password must include one special character from {special_char}")
             elif not any(str(i) in password.data for i in digits):
                 raise ValidationError(message="Password must include at least one number")
@@ -48,9 +51,13 @@ class BookingForm(FlaskForm):
     time = SelectField("Times: ", validators=[DataRequired()])
     username = StringField("Username: ", validators=[DataRequired()])
     password = StringField("Password: ", validators=[DataRequired()])
-    no_of_adult = IntegerField("Number of Adult tickets", validators=[DataRequired()])
-    no_of_child = IntegerField("Number of Child tickets", validators=[DataRequired()])
+    no_of_adult = IntegerField("Number of Adult tickets", validators=[])
+    no_of_child = IntegerField("Number of Child tickets", validators=[])
     submit = SubmitField("Confirm Order")
+
+    @property
+    def dt_time(self):
+        return time(*map(int, self.time.data.split(':')))
 
     def validate_username(self, username):
         customers = Customer.query.all()
@@ -66,15 +73,22 @@ class BookingForm(FlaskForm):
                 raise ValidationError(message="Password is Incorrect, please try again.")
 
     def validate_no_of_child(self, no_of_child):
-        film = Film.query.filter_by(id=self.movie.data).first()
-        show = Showing.query.filter_by(film_id=film.id,date=self.date.data,time=self.time.data).first()
-        
-        print(show.tickets)
-        print(film)
-        print(self.no_of_adult.data)
-        print(no_of_child.data)
+        show = Showing.query.filter_by(
+            film_id=self.movie.data,
+            date=self.date.data,
+            time=self.dt_time
+        ).first()
 
         if show.tickets < (self.no_of_adult.data + no_of_child.data):
-            print("we made it!")
             raise ValidationError(message=f"Please select less tickets, only {show.tickets} are avaiable.")
         
+
+class PaymentForm(FlaskForm):
+    address_line = StringField('Address: ')
+    city = StringField('City: ')
+    postcode = StringField('Postcode: ')
+    card_name = StringField('Card Name:')
+    card_no = IntegerField('Card Number:')
+    card_exp = StringField('Card Expiration Date:')
+    cvv = IntegerField('cvv')
+    submit = SubmitField('Finalise Puchase')

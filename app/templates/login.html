@@ -13,6 +13,9 @@
             {{ form.password.label }} {{ form.password(class="form-control", id="password") }}
             <br>
             <br>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
             {{ form.submit(class="form-control", id="logupsubmit") }}
         </form>
     </fieldset>

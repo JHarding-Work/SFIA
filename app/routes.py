@@ -1,9 +1,9 @@
-from app import app, bcrypt
-from app.models import *
-from app.forms import *
+from app import app, bcrypt, db
+from models import *
+from forms import *
 
-from datetime import datetime, timedelta
-from flask import redirect, url_for, render_template, request
+from datetime import datetime, timedelta, time
+from flask import redirect,render_template, request
 
 
 @app.route('/')
@@ -16,16 +16,17 @@ def home():
 def login():
     form = LoginForm()
 
+    message = None
+
     if request.method == 'POST':
-        if Customer.query.filter_by(username=form.username.data).count() == 1:
-            customer = Customer.query.filter_by(username=form.username.data).first()
+        customer = Customer.query.filter_by(username=form.username.data).first()
 
-            if bcrypt.check_password_hash(customer.password, form.password.data):
-                print("logged in")
+        if customer and customer.check_password(form.password.data):
+            message = "Logged In"
         else:
-            print("Failed to login")
+            message = "Failed to Log In"
 
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, message=message)
 
 
 @app.route('/sign up', methods=["GET", "POST"])
@@ -33,7 +34,6 @@ def signup():
     form = SignUpForm()
     
     if request.method == 'POST':
-        print(form.validate_on_submit())
         if form.validate_on_submit():
             customer = Customer(
                 username=form.username.data,
@@ -43,7 +43,6 @@ def signup():
             db.session.commit()
         else:
             print(form.errors)
-
 
     return render_template('sign_up.html', form=form)
 
@@ -94,10 +93,6 @@ def new_releases():
 
     lb = current_time - one_month
     ub = current_time + one_month
-    
-    print(current_time)
-    print(lb)
-    print(ub)
 
     return render_template(
         'listings.html',
@@ -113,37 +108,52 @@ def ticket_booking():
     films_list = Film.query.all()
     form.movie.choices = [(i.id, i.title) for i in films_list]
 
-    if form.search.data:
+    if form.submit.data:
         showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
-        form.time.choices = [(i.time,i.time) for i in showing_list]
+        form.time.choices = [(i.time, i.time) for i in showing_list]
 
-        return render_template('ticket_booking.html',form=form)
-    
-    elif form.submit.data:
-        
-        showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
-        form.time.choices = [(i.time,i.time) for i in showing_list]
-        
         if form.validate_on_submit():
             adult_ticket = form.no_of_adult.data
             child_ticket = form.no_of_child.data
-            showingbackref = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.time.data).first()
-            
-            if Customer.query.filter_by(username=form.username.data).count() == 1:
-                customer = Customer.query.filter_by(username=form.username.data).first()
 
-                if bcrypt.check_password_hash(customer.password, form.password.data):
-                
-                    new_transaction = Transaction(customer=customer)  
-                    db.session.add(new_transaction)
-                    db.session.commit()
-                
-                    new_booking = Booking(
-                        child_ticket=child_ticket,
-                        adult_ticket=adult_ticket,
-                        transaction=new_transaction,
-                        showing=showingbackref
-                    )
-                    db.session.add(new_booking)
-                    db.session.commit()
+            showing = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.dt_time).first()
+            customer = Customer.query.filter_by(username=form.username.data).first()
+
+            if customer and customer.check_password(form.password.data):
+                new_transaction = Transaction(customer=customer)
+                db.session.add(new_transaction)
+                db.session.commit()
+
+                new_booking = Booking(
+                    child_ticket=child_ticket,
+                    adult_ticket=adult_ticket,
+                    transaction=new_transaction,
+                    showing=showing
+                )
+                db.session.add(new_booking)
+                db.session.commit()
+                return redirect(f'/payments/{customer.id}')
+
+    elif form.search.data:
+        showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
+        form.time.choices = [(i.time,i.time) for i in showing_list]
+
     return render_template('ticket_booking.html',form=form)
+
+@app.route('/payments/<int:cust_id>', methods=['GET', 'POST'])
+def payments(cust_id):
+    form = PaymentForm()
+
+    if form.validate_on_submit():
+        customer = Customer.query.filter_by(id=cust_id).first()
+        customer.address_line = form.address_line.data
+        customer.city = form.city.data
+        customer.postcode = form.postcode.data
+        customer.card_name = form.card_name.data
+        customer.card_no = form.card_no.data
+        customer.card_exp = form.card_exp.data
+        customer.cvv = form.cvv.data
+        db.session.commit()
+        #redirect('/payment success')
+
+    return render_template('payments.html',form=form)

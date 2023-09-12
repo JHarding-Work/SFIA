@@ -1,6 +1,10 @@
 from app import app, bcrypt
-from app.models import *
+from models import *
 from datetime import date, time
+from time import sleep
+from sqlalchemy.exc import OperationalError
+from flask_bcrypt import generate_password_hash
+
 
 john = Person(first_name="John", last_name="Actor")
 sarah = Person(first_name="Sarah", last_name="Performer")
@@ -32,14 +36,27 @@ Showing(date=date(2023, 9, 25), time=time(11, 0), film=lord_of_the_rings)
 Showing(date=date(2023, 9, 25), time=time(15, 0), film=toy)
 
 
-customer = Customer(username="John Buyer", password="Password")
+customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
+customerb = Customer(username='Billy1010',password=generate_password_hash('password123!'))
+
+
+def populate_with_retries(retries):
+    try:
+        populate_db()
+
+    except OperationalError:
+        if retries > 0:
+            sleep(5)
+            populate_with_retries(retries-1)
+        else:
+            raise
 
 
 def populate_db():
     with app.app_context():
         db.drop_all()
         db.create_all()
-        db.session.add_all([oppenheimer, blue, lord_of_the_rings, toy, customer])
+        db.session.add_all([oppenheimer, blue, lord_of_the_rings, toy, customer, customerb])
         db.session.commit()
 
 
