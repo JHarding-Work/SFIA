@@ -1,10 +1,10 @@
-from datetime import time
+from datetime import time,date,datetime
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
 from flask_bcrypt import check_password_hash
-
+from re import match
 from models import Customer, Showing, Film
 
 
@@ -84,11 +84,43 @@ class BookingForm(FlaskForm):
         
 
 class PaymentForm(FlaskForm):
-    address_line = StringField('Address: ')
-    city = StringField('City: ')
-    postcode = StringField('Postcode: ')
-    card_name = StringField('Card Name:')
-    card_no = IntegerField('Card Number:')
-    card_exp = StringField('Card Expiration Date:')
-    cvv = IntegerField('cvv')
+    address_line = StringField('Address: ', validators=[DataRequired(),Length(max=30)])
+    city = StringField('City: ', validators=[DataRequired(),Length(max=30)])
+    postcode = StringField('Postcode: ', validators=[DataRequired(),Length(max=8)])
+    card_name = StringField('Card Name:', validators=[DataRequired(),Length(max=20)])
+    card_no = StringField('Card Number:', validators=[DataRequired(),Length(min=16,max=16)])
+    card_exp = StringField('Card Expiration Date:', validators=[DataRequired(),Length(max=7)])
+    cvv = StringField('cvv', validators=[DataRequired(), Length(min=3,max=3)])
     submit = SubmitField('Finalise Puchase')
+
+    def validate_postcode(self, postcode):
+        pattern = r'\A([A-Za-z]){2}(\d){1,2}(\s)?(\d)([A-Za-z]){2}\Z'
+        
+        if not match(pattern,postcode.data):
+            raise ValidationError(message='Please enter the postcode in the following format: "AB1 2CD" or "AB12 3CD"')
+
+    def validate_card_no(self, card_no):
+        
+        
+        if len(card_no.data) != 16:
+            raise ValidationError(message='Please ensure the card number has 16 digits.')
+        elif not all(i.isdigit() for i in card_no.data):
+            raise ValidationError(message='Please ensure you only use numerical characters.')
+        
+    def validate_card_exp(self, card_exp):
+        pattern = r'\A(\d){2}(/)(\d){4}\Z'
+        today = datetime.now().date()
+
+        if not match(pattern,card_exp.data):
+            raise ValidationError(message='Please put the date in the following format: mm/yyyy (eg: 09/2026 for September 2026).')
+        elif int(''.join(card_exp.data[0:2])) > 12:
+            raise ValidationError(message='please input a valid month between 01 and 12')
+        elif today.year > int(''.join(card_exp.data[3:7])) or (today.year == int(''.join(card_exp.data[3:7])) and today.month > int(''.join(card_exp.data[0:2]))):
+            raise ValidationError(message='Your card seems to have expired, please check the expiration date.')
+        
+    def validate_cvv(self,cvv):
+
+        if len(str(cvv.data)) != 3:
+            raise ValidationError(message='cvv must be 3 digits long.') 
+        elif not all(i.isdigit() for i in cvv.data):
+            raise ValidationError(message='please ensure the cvv only includes numerical values.')
