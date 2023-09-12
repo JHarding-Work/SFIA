@@ -93,12 +93,9 @@ def new_releases():
 
     lb = current_time - one_month
     ub = current_time + one_month
+    films=Film.query.filter(lb < Film.release_date, Film.release_date<ub).all()
 
-    return render_template(
-        'listings.html',
-        films=Film.query.filter(lb < Film.release_date, Film.release_date<ub).all(),
-        form=form
-    )
+    return render_template('listings.html', films=films, form=form)
 
 
 @app.route('/ticket booking', methods=['GET', 'POST'])
@@ -154,6 +151,7 @@ def payments(cust_id):
         customer.card_exp = form.card_exp.data
         customer.cvv = form.cvv.data
         db.session.commit()
-        #redirect('/payment success')
+      #  redirect('/payment success')
 
     return render_template('payments.html',form=form)
+
