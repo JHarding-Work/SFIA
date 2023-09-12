@@ -1,3 +1,5 @@
+from datetime import time
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
@@ -53,6 +55,10 @@ class BookingForm(FlaskForm):
     no_of_child = IntegerField("Number of Child tickets", validators=[])
     submit = SubmitField("Confirm Order")
 
+    @property
+    def dt_time(self):
+        return time(*map(int, self.time.data.split(':')))
+
     def validate_username(self, username):
         customers = Customer.query.all()
 
@@ -67,8 +73,11 @@ class BookingForm(FlaskForm):
                 raise ValidationError(message="Password is Incorrect, please try again.")
 
     def validate_no_of_child(self, no_of_child):
-        film = Film.query.filter_by(id=self.movie.data).first()
-        show = Showing.query.filter_by(film_id=self.movie.data,date=self.date.data,time=self.time.data).first()
+        show = Showing.query.filter_by(
+            film_id=self.movie.data,
+            date=self.date.data,
+            time=self.dt_time
+        ).first()
 
         if show.tickets < (self.no_of_adult.data + no_of_child.data):
             raise ValidationError(message=f"Please select less tickets, only {show.tickets} are avaiable.")

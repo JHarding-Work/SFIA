@@ -116,9 +116,7 @@ def ticket_booking():
             adult_ticket = form.no_of_adult.data
             child_ticket = form.no_of_child.data
 
-            showing_time = time(*map(int, form.time.data.split(':')))
-            showing = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=showing_time).first()
-
+            showing = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.dt_time).first()
             customer = Customer.query.filter_by(username=form.username.data).first()
 
             if customer and customer.check_password(form.password.data):
