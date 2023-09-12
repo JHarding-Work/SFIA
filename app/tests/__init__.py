@@ -2,18 +2,17 @@ from app import app
 from models import *
 
 from flask_testing import TestCase
-from datetime import date, time
-from flask_bcrypt import generate_password_hash 
+
 
 class TestBase(TestCase):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///flask-db.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
     TESTING = True
 
     def create_app(self):
         # Pass in testing configurations for the app.
         # Here we use sqlite without a persistent database for our tests.
         app.config.update(
-              SQLALCHEMY_DATABASE_URI="sqlite:///flask-db.db",
+              SQLALCHEMY_DATABASE_URI="sqlite:///test.db",
               SECRET_KEY='TEST_SECRET_KEY',
               DEBUG=True,
               WTF_CSRF_ENABLED=False

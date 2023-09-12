@@ -28,7 +28,12 @@ MYSQL_ROOT_PASSWORD=[Password]
 Where the variables can be any variables the use wishes.
 
 ## Images
-Images used were official movie posters and were used for educational purposes to demonstrate proper loading of resources.
+Images were used for educational purposes to demonstrate proper loading of resources.
+
+Toy story poster: https://en.wikipedia.org/wiki/Toy_Story_%28franchise%29#/media/File:Toy_Story_logo.svg
+Oppenheimer and blue beetle images: https://www.showcasecinemas.co.uk/showtimes/showcase-cinema-de-lux-bluewater
+Lord of the Rings image: https://imgix.ranker.com/list_img_v2/18851/2018851/original/101-things-you-didn-t-know-about-the-lord-of-the-rings-films-u1
+
 
 Contributors:
 - James Harding

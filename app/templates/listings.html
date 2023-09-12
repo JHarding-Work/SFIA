@@ -6,7 +6,7 @@
         {{ form.date.label }}: {{ form.date }} {{ form.submit }}
     </form>
     {% for film in films %}
-        <div class="row">
+        <div class="row poster-box">
             <a href="{{url_for('film', film_id=film.id)}}" class="col-sm-4">
                 <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." width="100%">
             </a>
