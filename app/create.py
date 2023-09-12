@@ -19,21 +19,20 @@ lord_of_the_rings = Film(title="Lord of the Rings", director=john_d, actors=[joh
 toy = Film(title="Toy Story", actors=[john, louise], image_src="toy-story.png", release_date=date(2021,9,6))
 
 
-for d in range(5, 14):
+for d in range(5, 18):
     for n in 11, 14:
         Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer, tickets=123)
 
 
-for d in range(13, 24):
-    for n in 9, 13, 17:
-        Showing(date=date(2023, 9, d), time=time(n, 0), film=oppenheimer, tickets=32)
-
+for d in range(13, 27):
     for n in 11, 15:
         Showing(date=date(2023, 9, d), time=time(n, 0), film=blue, tickets=12)
 
 
-Showing(date=date(2023, 9, 25), time=time(11, 0), film=lord_of_the_rings)
-Showing(date=date(2023, 9, 25), time=time(15, 0), film=toy)
+Showing(date=date(2023, 9, 22), time=time(11, 0), film=lord_of_the_rings)
+Showing(date=date(2023, 9, 22), time=time(15, 0), film=toy)
+Showing(date=date(2023, 9, 23), time=time(11, 0), film=lord_of_the_rings)
+Showing(date=date(2023, 9, 23), time=time(15, 0), film=toy)
 
 
 customer = Customer(username="John Buyer", password=bcrypt.generate_password_hash("Password"))
