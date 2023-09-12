@@ -61,7 +61,7 @@ def listings():
 
     return render_template(
         'listings.html',
-        films=Film.query.all(),
+        films=Film.query.join(Showing).filter(Showing.date == form.date.data),
         form=form,
     )
 
