@@ -31,3 +31,4 @@ app/tests/__pycache__/test_models.cpython-311-pytest-7.4.0.pyc
 app/tests/__pycache__/test_views.cpython-311-pytest-7.4.0.pyc
 app/static/qacinema.jpg
 app/static/qacinema2.jpg
+app/tests/__pycache__/test_forms.cpython-311-pytest-7.4.0.pyc
