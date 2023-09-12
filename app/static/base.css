@@ -49,3 +49,13 @@ body{
     height: 400px;
     opacity: 100%;
 }
+
+.block {
+  color: black;
+  display: block;
+  width: 100%;
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  text-align: center;
+}

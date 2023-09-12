@@ -29,7 +29,7 @@ def login():
     return render_template('login.html', form=form, message=message)
 
 
-@app.route('/sign up', methods=["GET", "POST"])
+@app.route('/signup', methods=["GET", "POST"])
 def signup():
     form = SignUpForm()
     
@@ -47,7 +47,7 @@ def signup():
     return render_template('sign_up.html', form=form)
 
 
-@app.route('/opening times')
+@app.route('/opening')
 def opening_times():
     return render_template('opening_times.html')
 
@@ -71,7 +71,7 @@ def film(film_id):
     return render_template("film.html", film=Film.query.get(film_id))
 
 
-@app.route('/about us')
+@app.route('/about')
 def about_us():
     return render_template('about_us.html')
 
@@ -81,7 +81,7 @@ def contacts():
     return render_template('contacts.html')
 
 
-@app.route('/new releases', methods=['GET', 'POST'])
+@app.route('/new', methods=['GET', 'POST'])
 def new_releases():
     form = DateSelectForm()
 
@@ -98,7 +98,7 @@ def new_releases():
     return render_template('listings.html', films=films, form=form)
 
 
-@app.route('/ticket booking', methods=['GET', 'POST'])
+@app.route('/bookings', methods=['GET', 'POST'])
 def ticket_booking():
     form = BookingForm(request.form)
 
@@ -151,10 +151,10 @@ def payments(cust_id):
         customer.card_exp = form.card_exp.data
         customer.cvv = form.cvv.data
         db.session.commit()
-        return redirect('/payment success')
+        return redirect('/success')
 
     return render_template('payments.html',form=form)
 
-@app.route('/payment success')
+@app.route('/success')
 def pay_success():
     return render_template('pay_success.html')
