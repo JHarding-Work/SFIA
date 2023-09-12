@@ -151,7 +151,10 @@ def payments(cust_id):
         customer.card_exp = form.card_exp.data
         customer.cvv = form.cvv.data
         db.session.commit()
-      #  redirect('/payment success')
+        return redirect('/payment success')
 
     return render_template('payments.html',form=form)
 
+@app.route('/payment success')
+def pay_success():
+    return render_template('pay_success.html')
