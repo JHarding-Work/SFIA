@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
   flask-app:
-    image: flask-app:latest
+    image: hubaccount12546/sfia:latest
     networks:
       - mynetwork
     environment:
