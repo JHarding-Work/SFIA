@@ -95,16 +95,12 @@ class PaymentForm(FlaskForm):
 
     def validate_postcode(self, postcode):
         pattern = r'\A([A-Za-z]){2}(\d){1,2}(\s)?(\d)([A-Za-z]){2}\Z'
-        
         if not match(pattern,postcode.data):
             raise ValidationError(message='Please enter the postcode in the following format: "AB1 2CD" or "AB12 3CD"')
 
     def validate_card_no(self, card_no):
-        
-        
-        if len(card_no.data) != 16:
-            raise ValidationError(message='Please ensure the card number has 16 digits.')
-        elif not all(i.isdigit() for i in card_no.data):
+                
+        if not all(i.isdigit() for i in card_no.data):
             raise ValidationError(message='Please ensure you only use numerical characters.')
         
     def validate_card_exp(self, card_exp):
@@ -120,7 +116,5 @@ class PaymentForm(FlaskForm):
         
     def validate_cvv(self,cvv):
 
-        if len(str(cvv.data)) != 3:
-            raise ValidationError(message='cvv must be 3 digits long.') 
-        elif not all(i.isdigit() for i in cvv.data):
+       if not all(i.isdigit() for i in cvv.data):
             raise ValidationError(message='please ensure the cvv only includes numerical values.')

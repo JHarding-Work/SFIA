@@ -129,7 +129,7 @@ def ticket_booking():
                 )
                 db.session.add(new_booking)
                 db.session.commit()
-                return redirect(f'/payments/{customer.id}')
+                return redirect(f'/payments/{customer.id}/{new_transaction.id}')
 
     elif form.search.data:
         showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
@@ -137,8 +137,8 @@ def ticket_booking():
 
     return render_template('ticket_booking.html',form=form)
 
-@app.route('/payments/<int:cust_id>', methods=['GET', 'POST'])
-def payments(cust_id):
+@app.route('/payments/<int:cust_id>/<int:trans_id>', methods=['GET', 'POST'])
+def payments(cust_id, trans_id):
     form = PaymentForm()
 
     if form.validate_on_submit():
@@ -150,6 +150,8 @@ def payments(cust_id):
         customer.card_no = form.card_no.data
         customer.card_exp = form.card_exp.data
         customer.cvv = form.cvv.data
+        transaction = Transaction.query.filter_by(id=trans_id).first()
+        transaction.is_complete = True
         db.session.commit()
         return redirect('/success')
 
