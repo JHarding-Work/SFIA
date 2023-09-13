@@ -35,6 +35,12 @@ class Film(db.Model):
     actors = db.relationship("Person", secondary="actor_film", back_populates="starred_in")
     showings = db.relationship("Showing", backref="film")
 
+    def next_showing(self):
+        if self.showings:
+            return min(showing.date for showing in self.showings)
+
+        return None
+
     @property
     def actor_list(self) -> List[str]:
         """

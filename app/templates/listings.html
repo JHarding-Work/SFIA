@@ -1,32 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <form method="post">
-        {{ form.hidden_tag() }}
-        {{ form.date.label }}: {{ form.date }} {{ form.submit }}
-    </form>
-    {% for film in films %}
-        <div class="row poster-box">
-            <a href="{{url_for('film', film_id=film.id)}}" class="col-sm-4">
+    <div class="jumbotron text-center">
+        <h1 class="font-impact">{{title}}</h1>
+    </div>
+
+    <nav class="film-container">
+        {% for film in films %}
+            <a href="{{url_for('film', film_id=film.id)}}">
                 <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." width="100%">
             </a>
-            <div class="col-sm-8">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h2>{{ film.title }}</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        CAST: {{ ", ".join(film.actor_list) }} <br> DIRECTOR: {{ film.director.fullname }}
-                    </div>
-                    <div class="col-sm-6">
-                        {% for showtime in film.showings if showtime.date == form.date.data %}
-                            <p> {{ showtime.formatted_time }}</p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </nav>
 {% endblock %}

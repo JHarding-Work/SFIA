@@ -371,7 +371,7 @@ class TestHome(TestBase):
         self.run_assertions(self.client.get('/home'))
 
 
-class TestListings(TestBase):
+class TestFilm(TestBase):
     def setUpTestData(self) -> None:
         self.oppenheimer = Film(title="Oppenheimer")
         self.showing1 = Showing(date=date(2023, 9, 15), time=time(11, 00), film=self.oppenheimer)
@@ -381,7 +381,7 @@ class TestListings(TestBase):
         db.session.commit()
 
     def test_post(self):
-        response = self.client.post('/listings', data=dict(date='2023-9-15'))
+        response = self.client.post('/film/1', data=dict(date='2023-9-15'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Oppenheimer', response.data)
         self.assertIn(b'11:00', response.data)
@@ -390,14 +390,14 @@ class TestListings(TestBase):
     @patch('routes.datetime')
     def test_get(self, datetime: Mock):
         datetime.now.return_value = Mock(date=lambda: date(2023, 9, 18))
-        response = self.client.get('/listings')
+        response = self.client.get('/film/1')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Oppenheimer', response.data)
         self.assertNotIn(b'11:00', response.data)
         self.assertIn(b'14:15', response.data)
 
 
-class TestFilm(TestBase):
+class TestListings(TestBase):
     def setUpTestData(self) -> None:
         self.oppenheimer = Film(title="Oppenheimer", image_src="TestImage")
 
@@ -405,7 +405,7 @@ class TestFilm(TestBase):
         db.session.commit()
 
     def test_get(self):
-        response = self.client.get('/film/1')
+        response = self.client.get('/listings')
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('src="/static/TestImage"', str(response.data))

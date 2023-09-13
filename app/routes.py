@@ -55,21 +55,29 @@ def opening_times() -> str:
 
 @app.route('/listings', methods=['GET', 'POST'])
 def listings() -> str:
-    form = DateSelectForm()
-
-    if not form.is_submitted():
-        form.date.data = datetime.now().date()
-
     return render_template(
         'listings.html',
-        films=Film.query.join(Showing).filter(Showing.date == form.date.data),
-        form=form,
+        films=Film.query.all(),
+        title="All Showings"
     )
 
 
-@app.route('/film/<int:film_id>')
+@app.route('/film/<int:film_id>', methods=['GET', 'POST'])
 def film(film_id) -> str:
-    return render_template("film.html", film=Film.query.get(film_id))
+    target_film = Film.query.get(film_id)
+    form = DateSelectForm()
+
+    if not form.is_submitted():
+        now = datetime.now().date()
+        next_showing = target_film.next_showing()
+
+        form.date.data = max(next_showing, now) if next_showing else now
+
+    return render_template(
+        "film.html",
+        film=target_film,
+        form=form
+    )
 
 
 @app.route('/about')
@@ -84,11 +92,6 @@ def contacts() -> str:
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_releases() -> str:
-    form = DateSelectForm()
-
-    if not form.is_submitted():
-        form.date.data = datetime.now().date()
-    
     current_time = datetime.now()
     one_month = timedelta(days=30)
 
@@ -96,7 +99,7 @@ def new_releases() -> str:
     ub = current_time + one_month
     films = Film.query.filter(lb < Film.release_date, Film.release_date < ub).all()
 
-    return render_template('listings.html', films=films, form=form)
+    return render_template('listings.html', films=films, title="New Releases")
 
 
 @app.route('/bookings', methods=['GET', 'POST'])

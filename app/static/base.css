@@ -5,6 +5,10 @@ body{
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
+.align-right{
+    text-align: right
+}
+
 
 .font-impact{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
@@ -58,4 +62,13 @@ body{
   padding: 14px;
   font-size: 16px;
   text-align: center;
+}
+
+.film-container {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.film-container > a {
+    margin: 50px 20px
 }
