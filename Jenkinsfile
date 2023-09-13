@@ -18,10 +18,20 @@ pipeline{
             }
             stage('Build Application'){
                 steps{
-                    sh 'docker build -t flask-app .'
+                    script{
+                        image = docker.build("hubaccount12546/sfia")
+                    }
                 }
             }
-
+            stage('Tag & Push Image'){
+                steps{
+                    script{
+                        docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS'){
+                            image.push("latest")
+                        }
+                    }
+                }
+            }
             stage('Deploy Server'){
                 steps{
                     sh 'docker-compose down'
