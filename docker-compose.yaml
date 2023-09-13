@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
   flask-app:
-    build: .
+    image: flask-app:latest
     networks:
       - mynetwork
     environment:

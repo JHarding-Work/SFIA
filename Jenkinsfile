@@ -16,10 +16,13 @@ pipeline{
                     sh 'python3 -m pytest --cov app --cov-report html'
                 }
             }
-            stage('Deploy Development Server'){
+            stage('Build Application'){
+                sh 'docker build -t flask-app'
+            }
+
+            stage('Deploy Server'){
                 steps{
                     sh 'sudo docker-compose down'
-                    sh 'sudo docker-compose --env-file $SECRETS_FILE build'
                     sh 'sudo docker-compose --env-file $SECRETS_FILE up -d'
                 }
             }
