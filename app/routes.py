@@ -1,3 +1,5 @@
+from werkzeug import Response
+
 from app import app, bcrypt, db
 from models import *
 from forms import *
@@ -8,14 +10,13 @@ from flask import redirect,render_template, request
 
 @app.route('/')
 @app.route('/home')
-def home():
+def home() -> str:
     return render_template('home.html')
 
 
 @app.route('/login', methods=["GET", "POST"])
-def login():
+def login() -> str:
     form = LoginForm()
-
     message = None
 
     if request.method == 'POST':
@@ -30,7 +31,7 @@ def login():
 
 
 @app.route('/signup', methods=["GET", "POST"])
-def signup():
+def signup() -> str:
     form = SignUpForm()
     
     if request.method == 'POST':
@@ -48,12 +49,12 @@ def signup():
 
 
 @app.route('/opening')
-def opening_times():
+def opening_times() -> str:
     return render_template('opening_times.html')
 
 
 @app.route('/listings', methods=['GET', 'POST'])
-def listings():
+def listings() -> str:
     form = DateSelectForm()
 
     if not form.is_submitted():
@@ -67,22 +68,22 @@ def listings():
 
 
 @app.route('/film/<int:film_id>')
-def film(film_id):
+def film(film_id) -> str:
     return render_template("film.html", film=Film.query.get(film_id))
 
 
 @app.route('/about')
-def about_us():
+def about_us() -> str:
     return render_template('about_us.html')
 
 
 @app.route('/contacts', methods=['GET', 'POST'])
-def contacts():
+def contacts() -> str:
     return render_template('contacts.html')
 
 
 @app.route('/new', methods=['GET', 'POST'])
-def new_releases():
+def new_releases() -> str:
     form = DateSelectForm()
 
     if not form.is_submitted():
@@ -93,13 +94,13 @@ def new_releases():
 
     lb = current_time - one_month
     ub = current_time + one_month
-    films=Film.query.filter(lb < Film.release_date, Film.release_date<ub).all()
+    films = Film.query.filter(lb < Film.release_date, Film.release_date < ub).all()
 
     return render_template('listings.html', films=films, form=form)
 
 
 @app.route('/bookings', methods=['GET', 'POST'])
-def ticket_booking():
+def ticket_booking() -> Response | str:
     form = BookingForm(request.form)
 
     films_list = Film.query.all()
@@ -135,10 +136,11 @@ def ticket_booking():
         showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
         form.time.choices = [(i.time,i.time) for i in showing_list]
 
-    return render_template('ticket_booking.html',form=form)
+    return render_template('ticket_booking.html', form=form)
+
 
 @app.route('/payments/<int:cust_id>/<int:trans_id>', methods=['GET', 'POST'])
-def payments(cust_id, trans_id):
+def payments(cust_id, trans_id) -> Response | str:
     form = PaymentForm()
 
     if form.validate_on_submit():
@@ -155,8 +157,9 @@ def payments(cust_id, trans_id):
         db.session.commit()
         return redirect('/success')
 
-    return render_template('payments.html',form=form)
+    return render_template('payments.html', form=form)
+
 
 @app.route('/success')
-def pay_success():
+def pay_success() -> str:
     return render_template('pay_success.html')
