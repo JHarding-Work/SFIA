@@ -1,13 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <form method="post">
-        {{ form.hidden_tag() }}
-        {{ form.date.label }}: {{ form.date }} {{ form.submit }}
-    </form>
+
     <div class="row poster-box">
         <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." class="col-sm-6">
         <div class="col-sm-5">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                {{ form.date.label }}: {{ form.date }} {{ form.submit }}
+            </form>
             <table style="width:100%">
                 <tr>
                     <td>
