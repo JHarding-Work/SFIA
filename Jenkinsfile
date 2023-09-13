@@ -2,6 +2,7 @@ pipeline{
         agent any
         environment{
             SECRETS_FILE=credentials('SECRETS_FILE')
+            APP_VERSION="v${BUILD_NUMBER}"
         }
         stages{
             stage('Installation'){
@@ -27,7 +28,7 @@ pipeline{
                 steps{
                     script{
                         docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS'){
-                            image.push("latest")
+                            image.push("${APP_VERSION}")
                         }
                     }
                 }
@@ -35,6 +36,7 @@ pipeline{
             stage('Deploy Server'){
                 steps{
                     sh 'docker-compose down'
+                    sh 'docker-compose pull'
                     sh 'docker-compose --env-file $SECRETS_FILE up -d'
                 }
             }
