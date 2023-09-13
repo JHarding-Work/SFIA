@@ -1,11 +1,10 @@
-from datetime import time,date,datetime
+from datetime import time, datetime
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField, IntegerField
 from wtforms.validators import DataRequired,Length, ValidationError
-from flask_bcrypt import check_password_hash
 from re import match
-from models import Customer, Showing, Film
+from models import Customer, Showing
 
 
 class LoginForm(FlaskForm):
@@ -19,13 +18,13 @@ class SignUpForm(FlaskForm):
     password = StringField('Password', validators=[DataRequired()])
     submit = SubmitField('Sign up')
 
-    def validate_username(self, username):
+    def validate_username(self, username) -> None:
         customers = Customer.query.all()
 
         if any(i.username == username.data for i in customers):
             raise ValidationError(message="Username is taken, please try a different one.")
 
-    def validate_password(self, password):
+    def validate_password(self, password) -> None:
 
             special_char = ['!','£','$','%','^','&','*','(',')',';',':']
             digits = list(i for i in range(0,10))
@@ -56,23 +55,22 @@ class BookingForm(FlaskForm):
     submit = SubmitField("Confirm Order")
 
     @property
-    def dt_time(self):
+    def dt_time(self) -> time:
         return time(*map(int, self.time.data.split(':')))
 
-    def validate_username(self, username):
+    def validate_username(self, username) -> None:
         customers = Customer.query.all()
 
         if not any(i.username == username.data for i in customers):
             raise ValidationError(message="Username does not exist.")
     
-    def validate_password(self, password):
-        
+    def validate_password(self, password) -> None:
         customer = Customer.query.filter_by(username=self.username.data).first()
-        if customer:
-            if not check_password_hash(customer.password, password.data):
-                raise ValidationError(message="Password is Incorrect, please try again.")
 
-    def validate_no_of_child(self, no_of_child):
+        if customer and not customer.check_password(password.data):
+            raise ValidationError(message="Password is Incorrect, please try again.")
+
+    def validate_no_of_child(self, no_of_child) -> None:
         show = Showing.query.filter_by(
             film_id=self.movie.data,
             date=self.date.data,
@@ -93,28 +91,27 @@ class PaymentForm(FlaskForm):
     cvv = StringField('cvv', validators=[DataRequired(), Length(min=3,max=3)])
     submit = SubmitField('Finalise Puchase')
 
-    def validate_postcode(self, postcode):
+    def validate_postcode(self, postcode) -> None:
         pattern = r'\A([A-Za-z]){2}(\d){1,2}(\s)?(\d)([A-Za-z]){2}\Z'
-        if not match(pattern,postcode.data):
+        if not match(pattern, postcode.data):
             raise ValidationError(message='Please enter the postcode in the following format: "AB1 2CD" or "AB12 3CD"')
 
-    def validate_card_no(self, card_no):
+    def validate_card_no(self, card_no) -> None:
                 
         if not all(i.isdigit() for i in card_no.data):
             raise ValidationError(message='Please ensure you only use numerical characters.')
         
-    def validate_card_exp(self, card_exp):
+    def validate_card_exp(self, card_exp) -> None:
         pattern = r'\A(\d){2}(/)(\d){4}\Z'
         today = datetime.now().date()
 
-        if not match(pattern,card_exp.data):
+        if not match(pattern, card_exp.data):
             raise ValidationError(message='Please put the date in the following format: mm/yyyy (eg: 09/2026 for September 2026).')
         elif int(''.join(card_exp.data[0:2])) > 12:
             raise ValidationError(message='please input a valid month between 01 and 12')
         elif today.year > int(''.join(card_exp.data[3:7])) or (today.year == int(''.join(card_exp.data[3:7])) and today.month > int(''.join(card_exp.data[0:2]))):
             raise ValidationError(message='Your card seems to have expired, please check the expiration date.')
         
-    def validate_cvv(self,cvv):
-
+    def validate_cvv(self, cvv) -> None:
        if not all(i.isdigit() for i in cvv.data):
             raise ValidationError(message='please ensure the cvv only includes numerical values.')

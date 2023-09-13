@@ -1,3 +1,5 @@
+from typing import List
+
 from app import db, bcrypt
 
 actor_film = db.Table(
@@ -16,7 +18,10 @@ class Person(db.Model):
     directed = db.relationship("Film", backref="director")
 
     @property
-    def fullname(self):
+    def fullname(self) -> str:
+        """
+        Returns the first and last names of a Person in one word.
+        """
         return f"{self.first_name} {self.last_name}"
 
 
@@ -31,7 +36,10 @@ class Film(db.Model):
     showings = db.relationship("Showing", backref="film")
 
     @property
-    def actor_list(self):
+    def actor_list(self) -> List[str]:
+        """
+        Returns a list of the full names of all actors for the film.
+        """
         return [actor.fullname for actor in self.actors]
 
 
@@ -48,7 +56,10 @@ class Customer(db.Model):
     cvv = db.Column(db.String(3))
     transactions = db.relationship("Transaction", backref="customer")
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
+        """
+        Compares a given password against the hash stored, returning true if the hash matches.
+        """
         return bcrypt.check_password_hash(self.password, password)
 
 
@@ -68,7 +79,10 @@ class Showing(db.Model):
     bookings = db.relationship("Booking", backref="showing")
 
     @property
-    def formatted_time(self):
+    def formatted_time(self) -> str:
+        """
+        The time, rendered in %H:%m format, where minutes are always shown in double decimal figures.
+        """
         return f"{self.time.hour}:{self.time.minute:0<2}"
 
 
