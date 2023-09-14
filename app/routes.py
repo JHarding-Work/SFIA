@@ -5,7 +5,7 @@ from models import *
 from forms import *
 
 from datetime import datetime, timedelta, time
-from flask import redirect,render_template, request
+from flask import redirect,render_template, request, session, url_for
 
 
 @app.route('/')
@@ -15,14 +15,16 @@ def home() -> str:
 
 
 @app.route('/login', methods=["GET", "POST"])
-def login() -> str:
+def login(message = None) -> str:
     form = LoginForm()
-    message = None
 
     if request.method == 'POST':
         customer = Customer.query.filter_by(username=form.username.data).first()
 
         if customer and customer.check_password(form.password.data):
+            session['loggedin'] = True
+            session['id'] = customer.id
+            session['username'] = customer.username
             message = "Logged In"
         else:
             message = "Failed to Log In"
@@ -55,9 +57,12 @@ def opening_times() -> str:
 
 @app.route('/listings', methods=['GET', 'POST'])
 def listings() -> str:
+    form = Searchform()
+
     return render_template(
         'listings.html',
-        films=Film.query.all(),
+        form=form,
+        films=Film.query.filter(Film.title.contains(form.search.data)),
         title="All Showings"
     )
 
@@ -92,14 +97,20 @@ def contacts() -> str:
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_releases() -> str:
+    form = Searchform()
+
     current_time = datetime.now()
     one_month = timedelta(days=30)
 
     lb = current_time - one_month
     ub = current_time + one_month
-    films = Film.query.filter(lb < Film.release_date, Film.release_date < ub).all()
+    films = Film.query.filter(
+        lb < Film.release_date, Film.release_date < ub
+    ).filter(
+        Film.title.contains(form.search.data)
+    )
 
-    return render_template('listings.html', films=films, title="New Releases")
+    return render_template('listings.html', form=form, films=films, title="New Releases")
 
 
 @app.route('/bookings', methods=['GET', 'POST'])
@@ -118,22 +129,25 @@ def ticket_booking() -> Response | str:
             child_ticket = form.no_of_child.data
 
             showing = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.dt_time).first()
-            customer = Customer.query.filter_by(username=form.username.data).first()
+            try:
+                customer = Customer.query.filter_by(id=session['id']).first()
+            except:
+                return redirect('/login')
+            
+            new_transaction = Transaction(customer=customer)
+            db.session.add(new_transaction)
+            db.session.commit()
+            session['trans'] = new_transaction.id
 
-            if customer and customer.check_password(form.password.data):
-                new_transaction = Transaction(customer=customer)
-                db.session.add(new_transaction)
-                db.session.commit()
-
-                new_booking = Booking(
-                    child_ticket=child_ticket,
-                    adult_ticket=adult_ticket,
-                    transaction=new_transaction,
-                    showing=showing
-                )
-                db.session.add(new_booking)
-                db.session.commit()
-                return redirect(f'/payments/{customer.id}/{new_transaction.id}')
+            new_booking = Booking(
+                child_ticket=child_ticket,
+                adult_ticket=adult_ticket,
+                transaction=new_transaction,
+                showing=showing
+            )
+            db.session.add(new_booking)
+            db.session.commit()
+            return redirect('/payments')
 
     elif form.search.data:
         showing_list = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data).all()
@@ -142,12 +156,12 @@ def ticket_booking() -> Response | str:
     return render_template('ticket_booking.html', form=form)
 
 
-@app.route('/payments/<int:cust_id>/<int:trans_id>', methods=['GET', 'POST'])
-def payments(cust_id, trans_id) -> Response | str:
+@app.route('/payments', methods=['GET', 'POST'])
+def payments() -> Response | str:
     form = PaymentForm()
 
     if form.validate_on_submit():
-        customer = Customer.query.filter_by(id=cust_id).first()
+        customer = Customer.query.filter_by(id=session['id']).first()
         customer.address_line = form.address_line.data
         customer.city = form.city.data
         customer.postcode = form.postcode.data
@@ -155,7 +169,7 @@ def payments(cust_id, trans_id) -> Response | str:
         customer.card_no = form.card_no.data
         customer.card_exp = form.card_exp.data
         customer.cvv = form.cvv.data
-        transaction = Transaction.query.filter_by(id=trans_id).first()
+        transaction = Transaction.query.filter_by(id=session['trans']).first()
         transaction.is_complete = True
         db.session.commit()
         return redirect('/success')
