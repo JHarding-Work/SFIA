@@ -35,7 +35,6 @@ pipeline{
             }
             stage('Deploy Server'){
                 steps{
-                    sh 'docker-compose pull'
                     sh 'docker-compose down'
                     sh 'docker-compose --env-file $SECRETS_FILE up -d'
                 }
