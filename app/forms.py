@@ -120,3 +120,8 @@ class PaymentForm(FlaskForm):
        '''Ensures all inputted values in the cvv are numerical'''
        if not all(i.isdigit() for i in cvv.data):
             raise ValidationError(message='please ensure the cvv only includes numerical values.')
+
+
+class Searchform(FlaskForm):
+    search = StringField(default=str())
+    submit = SubmitField("Search")
