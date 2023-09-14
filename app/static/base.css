@@ -9,6 +9,10 @@ body{
     text-align: right
 }
 
+.text-center{
+    text-align: center
+}
+
 
 .font-impact{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
@@ -33,10 +37,6 @@ body{
     padding-top: 25px;
 }
 
-
-#home div{
-    text-align: center;
-}
 
 #home a{
     font-size: 36px;
@@ -66,9 +66,19 @@ body{
 
 .film-container {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 25% 25% 25% 25%;
 }
 
-.film-container > a {
-    margin: 50px 20px
+.film-container img {
+  width: 250px;
+  height: 375px;
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.film-container > div {
+    margin: 20px 20px
 }

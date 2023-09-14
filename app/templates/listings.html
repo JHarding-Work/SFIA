@@ -7,9 +7,12 @@
 
     <nav class="film-container">
         {% for film in films %}
-            <a href="{{url_for('film', film_id=film.id)}}">
-                <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." width="100%">
-            </a>
+            <div>
+                <a href="{{url_for('film', film_id=film.id)}}">
+                    <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found..">
+                </a>
+                <h4 class="text-center">{{film.title}}</h4>
+            </div>
         {% endfor %}
     </nav>
 {% endblock %}

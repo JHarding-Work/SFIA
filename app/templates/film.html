@@ -3,8 +3,8 @@
 {% block body %}
 
     <div class="row poster-box">
-        <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." class="col-sm-6">
-        <div class="col-sm-5">
+        <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." class="col-sm-5">
+        <div class="col-sm-6">
             <form method="post">
                 {{ form.hidden_tag() }}
                 {{ form.date.label }}: {{ form.date }} {{ form.submit }}
