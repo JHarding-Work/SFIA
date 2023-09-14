@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
   flask-app:
-    image: hubaccount12546/sfia:latest
+    image: hubaccount12546/sfia:${BUILD_NUMBER}
     networks:
       - mynetwork
     environment:
