@@ -18,6 +18,8 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 from routes import *
+from create import populate_with_retries
 
 if __name__ == "__main__":
+    populate_with_retries(10)
     app.run(host="0.0.0.0", port=5000)
