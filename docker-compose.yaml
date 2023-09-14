@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
   flask-app:
-    image: hubaccount12546/${REPOSITORY}:latest
+    image: ${REPOSITORY}:latest
     networks:
       - mynetwork
     environment:
@@ -18,8 +18,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - target: 80
-        published: 80
+      - ${PORTS}
     volumes:
       - type: bind
         source: ./nginx.conf
