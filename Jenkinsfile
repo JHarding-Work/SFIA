@@ -3,6 +3,7 @@ pipeline{
         environment{
             SECRETS_FILE=credentials('SECRETS_FILE')
             APP_VERSION="v${BUILD_NUMBER}"
+            REPOSITORY="sfia"
         }
         stages{
             stage('Installation'){
@@ -20,7 +21,7 @@ pipeline{
             stage('Build Application'){
                 steps{
                     script{
-                        image = docker.build("hubaccount12546/sfia")
+                        image = docker.build("hubaccount12546/${REPOSITORY}")
                     }
                 }
             }
