@@ -4,7 +4,10 @@
     <div class="jumbotron text-center">
         <h1 class="font-impact">{{title}}</h1>
     </div>
-
+    <form class="align-right" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.search }} {{ form.submit }}
+    </form>
     <nav class="film-container">
         {% for film in films %}
             <div>
