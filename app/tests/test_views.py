@@ -1,6 +1,6 @@
 from datetime import date, time
 
-from flask import url_for
+from flask import url_for, session
 from datetime import date, time
 from flask_bcrypt import generate_password_hash
 
@@ -70,7 +70,7 @@ class TestGet(TestBase):
         customer = Customer(username='Billy1010',password=generate_password_hash('password123!'))
         transaction = Transaction(customer_id = customer.id)
 
-        response = self.client.get(f'/payments/{customer.id}/{transaction.id}')
+        response = self.client.get('/payments')
         self.assertEqual(response.status_code, 200)
     
     def pay_success_get(self):
@@ -133,48 +133,24 @@ class TestPost(TestBase):
         db.session.add_all([oppenheimer, customer])
         db.session.commit()
 
+        with self.client.session_transaction(subdomain="sess") as session:
+            session['loggedin'] = True
+            session['id'] = customer.id
+            session['username'] = customer.username
+
         #base test
         response = self.client.post(url_for('ticket_booking'),
                                     data=dict(movie=1,
                                             date=date(2023, 9, 13),
                                             time= time(11,0),
-                                            username='Billy1010',
-                                            password='password123!',
                                             no_of_adult=1,
                                             no_of_child=2,
                                             search=False,
                                             submit=True
-                                            ))
+                                            ),subdomain="sess")
         obj1 = Transaction.query.filter_by().count()
         self.assertEqual(obj1, 1)
 
-        #incorrect username
-        response = self.client.post(url_for('ticket_booking'),
-                                        data=dict(movie=1,
-                                            date=date(2023, 9, 13),
-                                            time= time(11,0),
-                                            username='Billy111111',
-                                            password='password123!',
-                                            no_of_adult=1,
-                                            no_of_child=2,
-                                            search=False,
-                                            submit=True
-                                            ))
-        obj1 = Transaction.query.filter_by(customer_id=customer2.id).first()
-        self.assertEqual(type(obj1), type(None))
-
-        #incorrect password
-        response = self.client.post(url_for('ticket_booking'),
-                                        data=dict(movie=1,
-                                            date=date(2023, 9, 13),
-                                            time= time(11,0),
-                                            username='Billy101010',
-                                            password='password12!',
-                                            no_of_adult=1,
-                                            no_of_child=2,
-                                            search=False,
-                                            submit=True
-                                            ))
         obj1 = Transaction.query.filter_by(customer_id=customer2.id).first()
         self.assertEqual(type(obj1), type(None))
 
@@ -189,7 +165,7 @@ class TestPost(TestBase):
                                             no_of_child=100,
                                             search=False,
                                             submit=True
-                                            ))
+                                            ),subdomain="sess")
         obj1 = Transaction.query.filter_by(customer_id=customer2.id).first()
         self.assertEqual(type(obj1), type(None))
     
@@ -199,6 +175,7 @@ class TestPost(TestBase):
         db.session.add(customer)
         db.session.add(transaction)
         db.session.commit()
+
         data=dict(
         address_line='flat 124 wefijwe',
         city='qwefqwefqwef',
@@ -208,83 +185,88 @@ class TestPost(TestBase):
         card_exp='11/2024',
         cvv='123')
 
+        with self.client.session_transaction(subdomain="sess") as session:
+            session['loggedin'] = True
+            session['id'] = customer.id
+            session['username'] = customer.username
+            session['trans'] = transaction.id
         #base test
         temp = data.copy()
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}',data=temp)
+        response = self.client.post('/payments',data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(address_line='flat 124 wefijwe').first()
         self.assertEqual(obj1.cvv,'123')
 
         #length tests
         temp = data.copy()
         temp['address_line'] = 'I Need to make this exactly 31c'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(address_line='I Need to make this exactly 31c').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['city'] = 'I Need to make this exactly 31c'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(city='I Need to make this exactly 31c').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['postcode'] = '9 charact'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(postcode='9 charact').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['card_name'] = 'This is exactly 20 ch'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess" )
         obj1 = Customer.query.filter_by(card_name='This is exactly 20 c').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['card_no'] = '012345678912345'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_no='012345678912345').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['card_no'] = '01234567891234567'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_no='01234567891234567').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['cvv'] = '01'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(cvv='01').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['cvv'] = '0123'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(cvv='0123').first()
         self.assertEqual(type(obj1), type(None))
 
         #Postcode Validation Tests
         temp = data.copy()
         temp['postcode'] = 'AB1 2CD'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by().first()
         self.assertEqual(obj1.postcode, 'AB1 2CD')
 
         temp = data.copy()
         temp['postcode'] = 'BN12 3CD'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by().first()
         self.assertEqual(obj1.postcode, 'BN12 3CD')
 
         temp = data.copy()
         temp['postcode'] = 'AB123CD'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by().first()
         self.assertEqual(obj1.postcode, 'AB123CD')
         
         temp = data.copy()
         temp['postcode'] = 'ABC23CD'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(postcode='ABC23CD').first()
         self.assertEqual(type(obj1), type(None))
 
@@ -292,13 +274,13 @@ class TestPost(TestBase):
 
         temp = data.copy()
         temp['card_no'] = '012345678912345a'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_no='012345678912345a').first()
         self.assertEqual(type(obj1), type(None))     
 
         temp = data.copy()
         temp['card_no'] = '0!23456789123456'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_no='012345678912345a').first()
         self.assertEqual(type(obj1), type(None))     
 
@@ -306,37 +288,37 @@ class TestPost(TestBase):
 
         temp = data.copy()
         temp['card_exp'] = '13/2025'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_exp='13/2025').first()
         self.assertEqual(type(obj1), type(None))     
 
         temp = data.copy()
         temp['card_exp'] = '01/2023'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_exp='01/20253').first()
         self.assertEqual(type(obj1), type(None))    
 
         temp = data.copy()
         temp['card_exp'] = '12/2022'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_exp='12/2022').first()
         self.assertEqual(type(obj1), type(None)) 
 
         temp = data.copy()
         temp['card_exp'] = '13 2025'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_exp='13 2025').first()
         self.assertEqual(type(obj1), type(None))     
 
         temp = data.copy()
         temp['card_exp'] = '3/2025'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_exp='3/2025').first()
         self.assertEqual(type(obj1), type(None))  
 
         temp = data.copy()
         temp['card_exp'] = '11/25'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(card_exp='11/25').first()
         self.assertEqual(type(obj1), type(None))  
 
@@ -344,13 +326,13 @@ class TestPost(TestBase):
 
         temp = data.copy()
         temp['cvv'] = '01a'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(cvv='01a').first()
         self.assertEqual(type(obj1), type(None))
 
         temp = data.copy()
         temp['cvv'] = '0!1'
-        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        response = self.client.post('/payments', data=temp, subdomain="sess")
         obj1 = Customer.query.filter_by(cvv='0!1').first()
         self.assertEqual(type(obj1), type(None))
 

@@ -25,32 +25,10 @@
             {% endfor %}
             
             <br>
-            {{ form.username.label }} {{ form.username(class="form-control") }}
-            
-            {% for field, errors in form.errors.items() %}
-            <small class="form-text text-muted error">
-                {% if field=='username' %}
-                    {{ ', '.join(errors) }}
-                {% endif %}
-            </small>
-            {% endfor %}
-
-            <br>
-            {{ form.password.label }} {{ form.password( type="password",class="form-control") }}
-            
-            {% for field, errors in form.errors.items() %}
-            <small class="form-text text-muted error">
-                {% if field=='password' %}
-                    {{ ', '.join(errors) }}
-                {% endif %}
-            </small>
-            {% endfor %}
-            
-            <br>
             {{ form.submit(class="form-control") }}
         </form>
     </fieldset>
 </div>
-<script src="{{ url_for('static', filename='booking.js') }}"></script>
+
 
 {% endblock %}
