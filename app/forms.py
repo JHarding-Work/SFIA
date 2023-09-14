@@ -47,8 +47,8 @@ class BookingForm(FlaskForm):
     search = SubmitField("Search")
     date = DateField("Date", validators=[DataRequired()])
     time = SelectField("Times: ", validators=[DataRequired()])
-    username = StringField("Username: ", validators=[DataRequired()])
-    password = StringField("Password: ", validators=[DataRequired()])
+#    username = StringField("Username: ", validators=[DataRequired()])
+#    password = StringField("Password: ", validators=[DataRequired()])
     no_of_adult = IntegerField("Number of Adult tickets", validators=[])
     no_of_child = IntegerField("Number of Child tickets", validators=[])
     submit = SubmitField("Confirm Order")
@@ -57,19 +57,19 @@ class BookingForm(FlaskForm):
     def dt_time(self):
         return time(*map(int, self.time.data.split(':')))
 
-    def validate_username(self, username):
-        '''Checks that a customer exists with a matching username'''
-        customers = Customer.query.all()
+#    def validate_username(self, username):
+#        '''Checks that a customer exists with a matching username'''
+#        customers = Customer.query.all()
 
-        if not any(i.username == username.data for i in customers):
-            raise ValidationError(message="Username does not exist.")
-    
-    def validate_password(self, password):
-        '''Checks for a password match from the record based on the existing username''' 
-        customer = Customer.query.filter_by(username=self.username.data).first()
-        if customer:
-            if not check_password_hash(customer.password, password.data):
-                raise ValidationError(message="Password is Incorrect, please try again.")
+#        if not any(i.username == username.data for i in customers):
+#            raise ValidationError(message="Username does not exist.")
+#    
+#    def validate_password(self, password):
+#        '''Checks for a password match from the record based on the existing username''' 
+#        customer = Customer.query.filter_by(username=self.username.data).first()
+#        if customer:
+#            if not check_password_hash(customer.password, password.data):
+#                raise ValidationError(message="Password is Incorrect, please try again.")
 
     def validate_no_of_child(self, no_of_child):
         '''Checks the amount of tickets avaiable is more than the amount attempting to be booked'''

@@ -1,6 +1,6 @@
 from app import app
 from models import *
-
+from flask import session
 from flask_testing import TestCase
 
 
