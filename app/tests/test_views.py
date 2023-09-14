@@ -337,9 +337,6 @@ class TestPost(TestBase):
         self.assertEqual(type(obj1), type(None))
 
 
-               
-
-
 class TestHome(TestBase):
     def run_assertions(self, response):
         self.assertEqual(response.status_code, 200)
@@ -382,8 +379,9 @@ class TestFilm(TestBase):
 class TestListings(TestBase):
     def setUpTestData(self) -> None:
         self.oppenheimer = Film(title="Oppenheimer", image_src="TestImage")
+        self.blue = Film(title="Blue Beetle")
 
-        db.session.add(self.oppenheimer)
+        db.session.add_all([self.oppenheimer, self.blue])
         db.session.commit()
 
     def test_get(self):
@@ -391,6 +389,12 @@ class TestListings(TestBase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('src="/static/TestImage"', str(response.data))
+
+    def test_search(self):
+        response = self.client.post('/listings', data=dict(search="blue"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Blue Beetle', response.data)
+        self.assertNotIn(b'Oppenheimer', response.data)
 
 
 class TestLogin(TestBase):

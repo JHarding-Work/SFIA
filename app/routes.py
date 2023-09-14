@@ -58,9 +58,12 @@ def opening_times() -> str:
 
 @app.route('/listings', methods=['GET', 'POST'])
 def listings() -> str:
+    form = Searchform()
+
     return render_template(
         'listings.html',
-        films=Film.query.all(),
+        form=form,
+        films=Film.query.filter(Film.title.contains(form.search.data)),
         title="All Showings"
     )
 
@@ -95,14 +98,20 @@ def contacts() -> str:
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_releases() -> str:
+    form = Searchform()
+
     current_time = datetime.now()
     one_month = timedelta(days=30)
 
     lb = current_time - one_month
     ub = current_time + one_month
-    films = Film.query.filter(lb < Film.release_date, Film.release_date < ub).all()
+    films = Film.query.filter(
+        lb < Film.release_date, Film.release_date < ub
+    ).filter(
+        Film.title.contains(form.search.data)
+    )
 
-    return render_template('listings.html', films=films, title="New Releases")
+    return render_template('listings.html', form=form, films=films, title="New Releases")
 
 
 @app.route('/bookings', methods=['GET', 'POST'])
