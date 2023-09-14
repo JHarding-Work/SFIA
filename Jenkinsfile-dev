@@ -4,6 +4,7 @@ pipeline{
             SECRETS_FILE=credentials('SECRETS_FILE')
             APP_VERSION="v${BUILD_NUMBER}"
             REPOSITORY="hubaccount12546/sfia"
+            PORTS="8081:80"
         }
         stages{
             stage('Installation'){
