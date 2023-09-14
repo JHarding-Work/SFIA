@@ -28,12 +28,13 @@ class SignUpForm(FlaskForm):
 
     def validate_password(self, password):
         """Checks the password for at least one special character and one numerical value"""
-        special_char = ['!', '£', '$', '%', '^', '&', '*', '(', ')', ';', ':']
-        digits = list(i for i in range(0, 10))
+        special_char = {'!', '£', '$', '%', '^', '&', '*', '(', ')', ';', ':'}
+        digits = set(map(str, range(10)))
+        password_characters = set(password.data)
 
-        if not any(i in password.data for i in special_char):
+        if not password_characters & special_char:
             raise ValidationError(message=f"Password must include one special character from {special_char}")
-        elif not any(str(i) in password.data for i in digits):
+        if not password_characters & digits:
             raise ValidationError(message="Password must include at least one number")
 
 
