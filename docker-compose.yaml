@@ -18,7 +18,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "80"
+      - "80:80"
     volumes:
       - type: bind
         source: ./nginx.conf
