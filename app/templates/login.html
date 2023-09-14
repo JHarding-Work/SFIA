@@ -10,7 +10,7 @@
             {{ form.username.label }} {{ form.username(class="form-control", id="usernametbx") }}
             <br>
             <br>
-            {{ form.password.label }} {{ form.password(class="form-control", id="password") }}
+            {{ form.password.label }} {{ form.password(type="password",class="form-control", id="password") }}
             <br>
             <br>
             {% if message %}
@@ -19,6 +19,6 @@
             {{ form.submit(class="form-control", id="logupsubmit") }}
         </form>
     </fieldset>
-    <a href="/sign up">New user? click here to create a new account!</a>
+    <a href="/signup">New user? click here to create a new account!</a>
 </div>
 {% endblock %}

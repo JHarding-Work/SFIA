@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
   flask-app:
-    build: .
+    image: hubaccount12546/${REPOSITORY}:latest
     networks:
       - mynetwork
     environment:

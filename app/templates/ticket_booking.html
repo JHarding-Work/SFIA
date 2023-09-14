@@ -36,7 +36,7 @@
             {% endfor %}
 
             <br>
-            {{ form.password.label }} {{ form.password(class="form-control") }}
+            {{ form.password.label }} {{ form.password( type="password",class="form-control") }}
             
             {% for field, errors in form.errors.items() %}
             <small class="form-text text-muted error">

@@ -2,6 +2,8 @@ pipeline{
         agent any
         environment{
             SECRETS_FILE=credentials('SECRETS_FILE')
+            APP_VERSION="v${BUILD_NUMBER}"
+            REPOSITORY="sfia"
         }
         stages{
             stage('Installation'){
@@ -16,11 +18,26 @@ pipeline{
                     sh 'python3 -m pytest --cov app --cov-report html'
                 }
             }
-            stage('Deploy Development Server'){
+            stage('Build Application'){
                 steps{
-                    sh 'sudo docker-compose down'
-                    sh 'sudo docker-compose --env-file $SECRETS_FILE build'
-                    sh 'sudo docker-compose --env-file $SECRETS_FILE up -d'
+                    script{
+                        image = docker.build("hubaccount12546/${REPOSITORY}")
+                    }
+                }
+            }
+            stage('Tag & Push Image'){
+                steps{
+                    script{
+                        docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS'){
+                            image.push("${APP_VERSION}")
+                        }
+                    }
+                }
+            }
+            stage('Deploy Server'){
+                steps{
+                    sh 'docker-compose down'
+                    sh 'docker-compose --env-file $SECRETS_FILE up -d'
                 }
             }
         }

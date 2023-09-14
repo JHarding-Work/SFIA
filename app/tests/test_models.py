@@ -4,18 +4,8 @@ from models import *
 
 from datetime import date, time
 
-class TestFilm(TestBase):
-    def create_app(self):
-        # Pass in testing configurations for the app.
-        # Here we use sqlite without a persistent database for our tests.
-        app.config.update(
-              SQLALCHEMY_DATABASE_URI="sqlite:///test.db",
-              SECRET_KEY='TEST_SECRET_KEY',
-              DEBUG=True,
-              WTF_CSRF_ENABLED=False
-        )
-        return app
 
+class TestFilm(TestBase):
     def setUp(self) -> None:
         self.john = Person(first_name="John", last_name="Actor")
         self.sarah = Person(first_name="Sarah", last_name="Performer")

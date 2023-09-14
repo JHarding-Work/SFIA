@@ -48,24 +48,45 @@ class TestGet(TestBase):
         self.assertEqual(response.status_code, 200)
 
     def test_single_film_get(self):
+        
+        john = Person(first_name="John", last_name="Actor")
         sarah = Person(first_name="Sarah", last_name="Performer")
         stephenson = Person(first_name="Stephen", last_name="Son")
+        louise = Person(first_name="Louise", last_name="Actor")
         john_d = Person(first_name="John", last_name="Director")
+
         oppenheimer = Film(title="Oppenheimer", director=john_d, actors=[stephenson, sarah], image_src="oppenheimer.jpg", release_date=date(2023,9,6))
+        blue = Film(title="Blue Beetle", director=sarah, actors=[stephenson], image_src="blue.jpg", release_date=date(2023,9,15))
+        lord_of_the_rings = Film(title="Lord of the Rings", director=john_d, actors=[john, sarah], image_src="lord-of-the-rings.jpg", release_date=date(2024,9,6))
+        toy = Film(title="Toy Story", actors=[john, louise], image_src="toy-story.png", release_date=date(2021,9,6))
+
 
         films = Film.query.all()
         for film in films:
             response = self.client.get(f'/film/{film.id}')
             self.assertEqual(response.status_code, 200)
+    
+    def payments_get(self):
+        customer = Customer(username='Billy1010',password=generate_password_hash('password123!'))
+        transaction = Transaction(customer_id = customer.id)
+
+        response = self.client.get(f'/payments/{customer.id}/{transaction.id}')
+        self.assertEqual(response.status_code, 200)
+    
+    def pay_success_get(self):
+        response = self.client.get(url_for('pay_success'))
+        self.assertEqual(response.status_code, 200)
+    
 
 
 class TestPost(TestBase):
     def test_sign_up_post(self):
-        # min length test
+        # base test
         response = self.client.post(url_for('signup'), data=dict(username='Athena', password='pass123!'))
         obj1 = Customer.query.filter_by(username='Athena').first()
         self.assertEqual(obj1.username, 'Athena')
-
+        
+        # min length tests
         response = self.client.post(url_for('signup'), data=dict(username='Athen', password='pass123!'))
         obj1 = Customer.query.filter_by(username='Athen').first()
         self.assertEqual(type(obj1), type(None))
@@ -171,6 +192,170 @@ class TestPost(TestBase):
                                             ))
         obj1 = Transaction.query.filter_by(customer_id=customer2.id).first()
         self.assertEqual(type(obj1), type(None))
+    
+    def test_payment_post(self):
+        customer = Customer(id=1,username='Billy1010',password=generate_password_hash('password123!'))
+        transaction = Transaction(customer_id = customer.id)
+        db.session.add(customer)
+        db.session.add(transaction)
+        db.session.commit()
+        data=dict(
+        address_line='flat 124 wefijwe',
+        city='qwefqwefqwef',
+        postcode='AB12 3CD',
+        card_name='asdfasdv',
+        card_no='1234567890123451',
+        card_exp='11/2024',
+        cvv='123')
+
+        #base test
+        temp = data.copy()
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}',data=temp)
+        obj1 = Customer.query.filter_by(address_line='flat 124 wefijwe').first()
+        self.assertEqual(obj1.cvv,'123')
+
+        #length tests
+        temp = data.copy()
+        temp['address_line'] = 'I Need to make this exactly 31c'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(address_line='I Need to make this exactly 31c').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['city'] = 'I Need to make this exactly 31c'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(city='I Need to make this exactly 31c').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['postcode'] = '9 charact'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(postcode='9 charact').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['card_name'] = 'This is exactly 20 ch'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_name='This is exactly 20 c').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['card_no'] = '012345678912345'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_no='012345678912345').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['card_no'] = '01234567891234567'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_no='01234567891234567').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['cvv'] = '01'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(cvv='01').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['cvv'] = '0123'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(cvv='0123').first()
+        self.assertEqual(type(obj1), type(None))
+
+        #Postcode Validation Tests
+        temp = data.copy()
+        temp['postcode'] = 'AB1 2CD'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by().first()
+        self.assertEqual(obj1.postcode, 'AB1 2CD')
+
+        temp = data.copy()
+        temp['postcode'] = 'BN12 3CD'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by().first()
+        self.assertEqual(obj1.postcode, 'BN12 3CD')
+
+        temp = data.copy()
+        temp['postcode'] = 'AB123CD'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by().first()
+        self.assertEqual(obj1.postcode, 'AB123CD')
+        
+        temp = data.copy()
+        temp['postcode'] = 'ABC23CD'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(postcode='ABC23CD').first()
+        self.assertEqual(type(obj1), type(None))
+
+        #Card Number Validation Tests
+
+        temp = data.copy()
+        temp['card_no'] = '012345678912345a'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_no='012345678912345a').first()
+        self.assertEqual(type(obj1), type(None))     
+
+        temp = data.copy()
+        temp['card_no'] = '0!23456789123456'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_no='012345678912345a').first()
+        self.assertEqual(type(obj1), type(None))     
+
+        #Card Expiry Validation Tests
+
+        temp = data.copy()
+        temp['card_exp'] = '13/2025'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_exp='13/2025').first()
+        self.assertEqual(type(obj1), type(None))     
+
+        temp = data.copy()
+        temp['card_exp'] = '01/2023'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_exp='01/20253').first()
+        self.assertEqual(type(obj1), type(None))    
+
+        temp = data.copy()
+        temp['card_exp'] = '12/2022'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_exp='12/2022').first()
+        self.assertEqual(type(obj1), type(None)) 
+
+        temp = data.copy()
+        temp['card_exp'] = '13 2025'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_exp='13 2025').first()
+        self.assertEqual(type(obj1), type(None))     
+
+        temp = data.copy()
+        temp['card_exp'] = '3/2025'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_exp='3/2025').first()
+        self.assertEqual(type(obj1), type(None))  
+
+        temp = data.copy()
+        temp['card_exp'] = '11/25'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(card_exp='11/25').first()
+        self.assertEqual(type(obj1), type(None))  
+
+        #cvv Validation Tests
+
+        temp = data.copy()
+        temp['cvv'] = '01a'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(cvv='01a').first()
+        self.assertEqual(type(obj1), type(None))
+
+        temp = data.copy()
+        temp['cvv'] = '0!1'
+        response = self.client.post(f'/payments/{customer.id}/{transaction.id}', data=temp)
+        obj1 = Customer.query.filter_by(cvv='0!1').first()
+        self.assertEqual(type(obj1), type(None))
+
+
+               
 
 
 class TestHome(TestBase):
@@ -186,7 +371,7 @@ class TestHome(TestBase):
         self.run_assertions(self.client.get('/home'))
 
 
-class TestListings(TestBase):
+class TestFilm(TestBase):
     def setUpTestData(self) -> None:
         self.oppenheimer = Film(title="Oppenheimer")
         self.showing1 = Showing(date=date(2023, 9, 15), time=time(11, 00), film=self.oppenheimer)
@@ -196,7 +381,7 @@ class TestListings(TestBase):
         db.session.commit()
 
     def test_post(self):
-        response = self.client.post('/listings', data=dict(date='2023-9-15'))
+        response = self.client.post('/film/1', data=dict(date='2023-9-15'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Oppenheimer', response.data)
         self.assertIn(b'11:00', response.data)
@@ -205,14 +390,14 @@ class TestListings(TestBase):
     @patch('routes.datetime')
     def test_get(self, datetime: Mock):
         datetime.now.return_value = Mock(date=lambda: date(2023, 9, 18))
-        response = self.client.get('/listings')
+        response = self.client.get('/film/1')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Oppenheimer', response.data)
         self.assertNotIn(b'11:00', response.data)
         self.assertIn(b'14:15', response.data)
 
 
-class TestFilm(TestBase):
+class TestListings(TestBase):
     def setUpTestData(self) -> None:
         self.oppenheimer = Film(title="Oppenheimer", image_src="TestImage")
 
@@ -220,7 +405,7 @@ class TestFilm(TestBase):
         db.session.commit()
 
     def test_get(self):
-        response = self.client.get('/film/1')
+        response = self.client.get('/listings')
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('src="/static/TestImage"', str(response.data))

@@ -25,10 +25,25 @@ in order for the build to be able to function. The file will need to be of the f
 SECRET_KEY=[Secret Key]   
 MYSQL_ROOT_PASSWORD=[Password]
 
-Where the variables can be any variables the use wishes.
+Where the variables can be any variables the user wishes.
+
+## Running Tests
+If trying to run tests of your locally, simply input the following command into the terminal:
+- python3 -m pytest --cov --cov-report html
+This will generate a html coverage report in the folder in the following relative path:
+- htmlcov\index.html
+
+By settting up a Jenkins pipeline using the pre-existing Jenkinsfile, a coverage report will also be produced as well as the application running.
+A webhook can also be setup to allow for coverage reports to be created everytime a change is commited to the project.
+
 
 ## Images
-Images used were official movie posters and were used for educational purposes to demonstrate proper loading of resources.
+Images were used for educational purposes to demonstrate proper loading of resources.
+
+Toy story poster: https://en.wikipedia.org/wiki/Toy_Story_%28franchise%29#/media/File:Toy_Story_logo.svg
+Oppenheimer and blue beetle images: https://www.showcasecinemas.co.uk/showtimes/showcase-cinema-de-lux-bluewater
+Lord of the Rings image: https://imgix.ranker.com/list_img_v2/18851/2018851/original/101-things-you-didn-t-know-about-the-lord-of-the-rings-films-u1
+
 
 Contributors:
 - James Harding

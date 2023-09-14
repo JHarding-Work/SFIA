@@ -1,5 +1,35 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." width="100%">
+
+    <div class="row poster-box">
+        <img src="{{url_for('static', filename=film.image_src)}}" alt="Image not found.." class="col-sm-5">
+        <div class="col-sm-6">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                {{ form.date.label }}: {{ form.date }} {{ form.submit }}
+            </form>
+            <table style="width:100%">
+                <tr>
+                    <td>
+                        <h2>{{ film.title }}</h2>
+                    </td>
+                    <td class="align-right">
+                        <br>
+                        <h4>Show Times</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        CAST: {{ ", ".join(film.actor_list) }} <br> DIRECTOR: {{ film.director.fullname }}
+                    </td>
+                    <td class="align-right">
+                        {% for showtime in film.showings if showtime.date == form.date.data %}
+                            <p> {{ showtime.formatted_time }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 {% endblock %}
