@@ -5,7 +5,7 @@ from models import *
 from forms import *
 
 from datetime import datetime, timedelta, time
-from flask import redirect,render_template, request, session
+from flask import redirect,render_template, request, session, url_for
 
 
 @app.route('/')
@@ -15,9 +15,8 @@ def home() -> str:
 
 
 @app.route('/login', methods=["GET", "POST"])
-def login() -> str:
+def login(message = None) -> str:
     form = LoginForm()
-    message = None
 
     if request.method == 'POST':
         customer = Customer.query.filter_by(username=form.username.data).first()
@@ -130,9 +129,11 @@ def ticket_booking() -> Response | str:
             child_ticket = form.no_of_child.data
 
             showing = Showing.query.filter_by(film_id=form.movie.data, date=form.date.data, time=form.dt_time).first()
-            customer = Customer.query.filter_by(id=session['id']).first()
-
-
+            try:
+                customer = Customer.query.filter_by(id=session['id']).first()
+            except:
+                return redirect('/login')
+            
             new_transaction = Transaction(customer=customer)
             db.session.add(new_transaction)
             db.session.commit()
