@@ -30,6 +30,7 @@ Where the variables can be any variables the user wishes.
 ## Running Tests
 If trying to run tests of your locally, simply input the following command into the terminal:
 - python3 -m pytest --cov --cov-report html
+
 This will generate a html coverage report in the folder in the following relative path:
 - htmlcov\index.html
 
